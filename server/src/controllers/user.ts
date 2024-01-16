@@ -31,3 +31,38 @@ export const newUser = TryCatch(
         })
     }
 )
+
+export const getAllUsers = TryCatch(
+    async (req, res, next) => {
+        const users = await User.find({});
+        return res.status(200).json({
+            success: true,
+            users
+        });
+    }
+)
+
+export const getUser = TryCatch(
+    async (req, res, next) => {
+        const id = req.params.id;
+        const user = await User.findById(id);
+        if (!user) return next(new ErrorHandler("User not found", 400));
+        return res.status(200).json({
+            success: true,
+            user
+        });
+    }
+)
+
+export const delUser = TryCatch(
+    async (req, res, next) => {
+        const id = req.params.id;
+        const user = await User.findById(id);
+        if (!user) return next(new ErrorHandler("User not found", 400));
+        await user.deleteOne();
+        return res.status(200).json({
+            success: true,
+            messsage: "User Deleted"
+        });
+    }
+)
