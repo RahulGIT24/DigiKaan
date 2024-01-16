@@ -2,6 +2,7 @@ import express from "express"
 
 // controllers
 import { delUser, getAllUsers, getUser, newUser } from "../controllers/user.js";
+import { adminOnly } from "../middlewares/auth.js";
 
 const app = express.Router();
 
@@ -9,10 +10,10 @@ const app = express.Router();
 app.post("/new",newUser);
 
 // route -> /api/v1/user/all
-app.get("/all",getAllUsers);
+app.get("/all",adminOnly,getAllUsers);
 
 // route -> /api/v1/user/:id
-app.route("/:id").get(getUser).delete(delUser);
+app.route("/:id").get(getUser).delete(adminOnly,delUser);
 
 
 export default app;
