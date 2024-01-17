@@ -13,7 +13,18 @@ export interface NewProductRequestBody {
     name: string,
     category: string,
     price: number,
-    stock:number
+    stock: number
 }
 
 export type Controller = (req: Request, res: Response, next: NextFunction) => Promise<void | Response<any, Record<string, any>>>
+
+export interface BaseQuery {
+    name?: {
+        $regex: string,
+        $options: "i"
+    };
+    price?: {
+        $lte: number
+    };
+    category?: string
+}
