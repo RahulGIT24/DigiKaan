@@ -7,9 +7,9 @@ const app = express.Router();
 
 app.post("/new", adminOnly, singleUpload, newProduct)
 app.get("/latest", getLatestProducts)
-app.get("/all", getAllProducts)
+app.get("/all", getAllProducts) 
 app.get("/categories", getAllCategories)
 app.get("/admin-products", adminOnly, getAdminProducts)
-app.route("/:id").get(getSingleProduct).put(adminOnly, updateProduct).delete(adminOnly, deleteProduct)
+app.route("/:id").get(getSingleProduct).put(adminOnly, singleUpload,updateProduct).delete(adminOnly, deleteProduct)
 
 export default app;
