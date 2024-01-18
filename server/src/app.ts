@@ -1,9 +1,11 @@
 import express from "express"
-
+import NodeCache from "node-cache";
 const app = express();
 app.use(express.json());
 const port = 3000;
 connectDB();
+
+export const myCache = new NodeCache()
 
 // Importing routes
 import userRoutes from "./routes/user.js"

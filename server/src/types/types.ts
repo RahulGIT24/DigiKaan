@@ -28,3 +28,9 @@ export interface BaseQuery {
     };
     category?: string
 }
+
+export interface invalidateCacheType{
+    product?:boolean,
+    order?:boolean,
+    admin?:boolean
+}
