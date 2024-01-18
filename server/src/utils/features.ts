@@ -5,8 +5,8 @@ import { Product } from "../models/product.js";
 
 export const connectDB = async () => {
     try {
-        await mongoose.connect("mongodb://localhost:27017", {
-            dbName: "Ecommerce_Store"
+        await mongoose.connect(process.env.MONGODB_URI!, {
+            dbName: process.env.DB_NAME!
         })
         console.log("Connected");
         return;
