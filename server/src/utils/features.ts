@@ -16,7 +16,7 @@ export const connectDB = async () => {
     }
 }
 
-export const invalidateCache = async ({ product, order, admin, user, orderId }: invalidateCacheType) => {
+export const invalidateCache = async ({ product, order, user, orderId, admin = true }: invalidateCacheType) => {
     if (product) {
         const productKeys: string[] = ["categories", "latest-product", "admin-products"];
         const products = await Product.find({}).select("_id");
@@ -30,7 +30,8 @@ export const invalidateCache = async ({ product, order, admin, user, orderId }: 
         myCache.del(orderKeys);
     }
     if (admin) {
-
+        const adminKeys: string[] = ["admin-stats"];
+        myCache.del(adminKeys)
     }
 }
 
@@ -44,4 +45,12 @@ export const reduceStock = async (orderItems: OrderItemType[]) => {
         product.stock -= order.quantity;
         await product.save();
     }
+}
+
+export const calculatePercentage = (thisMonth: number, lastMonth: number) => {
+    if (lastMonth === 0) {
+        return thisMonth * 100;
+    }
+    const percent = (thisMonth - lastMonth) / lastMonth * 100;
+    return Number(percent.toFixed(0));
 }
