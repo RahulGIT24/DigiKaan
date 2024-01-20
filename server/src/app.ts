@@ -15,6 +15,7 @@ export const myCache = new NodeCache()
 import userRoutes from "./routes/user.js"
 import productRoutes from "./routes/products.js"
 import orderRoutes from "./routes/orders.js"
+import paymentRoute from "./routes/payment.js"
 import { connectDB } from "./utils/features.js";
 import { errorMiddleWare } from "./middlewares/error.js";
 
@@ -22,6 +23,7 @@ import { errorMiddleWare } from "./middlewares/error.js";
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/product", productRoutes);
 app.use("/api/v1/order", orderRoutes);
+app.use("/api/v1/payment", paymentRoute);
 
 app.use("/uploads",express.static("uploads"))
 app.use(errorMiddleWare)

@@ -14,7 +14,7 @@ export const adminOnly = TryCatch(
             return next(new ErrorHandler("User not Found", 401))
         }
         if (user.role !== "admin") {
-            return next(new ErrorHandler("You are not admin", 401))
+            return next(new ErrorHandler("You are not admin", 403))
         }
         next();
     }
