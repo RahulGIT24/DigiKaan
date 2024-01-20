@@ -30,7 +30,7 @@ export const invalidateCache = async ({ product, order, user, orderId, admin = t
         myCache.del(orderKeys);
     }
     if (admin) {
-        const adminKeys: string[] = ["admin-stats"];
+        const adminKeys: string[] = ["admin-stats", "admin-pie-chart"];
         myCache.del(adminKeys)
     }
 }
@@ -51,6 +51,16 @@ export const calculatePercentage = (thisMonth: number, lastMonth: number) => {
     if (lastMonth === 0) {
         return thisMonth * 100;
     }
-    const percent = (thisMonth - lastMonth) / lastMonth * 100;
+    const percent = (thisMonth / lastMonth) * 100;
     return Number(percent.toFixed(0));
+}
+
+export const getInventories = async ({ categories, productCount }: { categories: string[], productCount: number }) => {
+    const categoriesCountPromise = categories.map(category => Product.countDocuments({ category }))
+    const categoriesCount = await Promise.all(categoriesCountPromise);
+    const categoryCount: Record<string, number>[] = []
+    categories.forEach((category, i) => categoryCount.push({
+        [category]: Math.round((categoriesCount[i] / productCount) * 100)
+    }))
+    return categoryCount;
 }

@@ -2,7 +2,7 @@ import { myCache } from "../app.js";
 import { Order } from "../models/order.js";
 import { Product } from "../models/product.js";
 import { User } from "../models/user.js";
-import { calculatePercentage } from "../utils/features.js";
+import { calculatePercentage, getInventories } from "../utils/features.js";
 import { TryCatch } from "../utils/utility-class.js";
 
 export const getDashBoardStats = TryCatch(async (req, res, next) => {
@@ -104,8 +104,8 @@ export const getDashBoardStats = TryCatch(async (req, res, next) => {
             User.countDocuments(),
             Order.find({}).select("total"),
             Product.distinct("category"),
-            User.countDocuments({gender:"female"}),
-            Order.find({}).select(["orderItems","discount","total","status"]).limit(4)
+            User.countDocuments({ gender: "female" }),
+            Order.find({}).select(["orderItems", "discount", "total", "status"]).limit(4)
         ]);
 
 
@@ -147,26 +147,21 @@ export const getDashBoardStats = TryCatch(async (req, res, next) => {
         }
 
         // Inventory
-        const categoriesCountPromise = categories.map(category => Product.countDocuments({ category }))
-        const categoriesCount = await Promise.all(categoriesCountPromise);
-        const categoryCount: Record<string, number>[] = []
-        categories.forEach((category, i) => categoryCount.push({
-            [category]: Math.round((categoriesCount[i] / productCount) * 100)
-        }))
+        const categoryCount: Record<string, number>[] = await getInventories({ categories, productCount })
 
         // Male female Ratio
         const userRatio = {
-            male:userCount - femaleUsers,
-            female:femaleUsers
+            male: userCount - femaleUsers,
+            female: femaleUsers
         }
 
         // Modifying latest transaction
-        const modifiedLatestTransaction = latestTransactions.map((i)=>({
+        const modifiedLatestTransaction = latestTransactions.map((i) => ({
             _id: i._id,
             discount: i.discount,
-            total:i.total,
-            status:i.status,
-            quantity:i.orderItems.length
+            total: i.total,
+            status: i.status,
+            quantity: i.orderItems.length
         }))
 
         stats = {
@@ -174,7 +169,7 @@ export const getDashBoardStats = TryCatch(async (req, res, next) => {
             user: calculatePercentage(thisMonthUsers.length, lastMonthUsers.length),
             order: calculatePercentage(thisMonthOrders.length, lastMonthOrders.length),
             product: calculatePercentage(thisMonthProducts.length, lastMonthProducts.length),
-            count, chart, categoryCount, userRatio, latestTransactions:modifiedLatestTransaction
+            count, chart, categoryCount, userRatio, latestTransactions: modifiedLatestTransaction
         }
 
         myCache.set("admin-stats", JSON.stringify(stats))
@@ -186,6 +181,86 @@ export const getDashBoardStats = TryCatch(async (req, res, next) => {
     });
 });
 
-export const getPieCharts = TryCatch(async () => { });
+export const getPieCharts = TryCatch(async (req, res, next) => {
+    let charts;
+    if (myCache.has("admin-pie-chart")) charts = JSON.parse(myCache.get("admin-pie-chart") as string);
+    else {
+        const [
+            procesingOrder,
+            shippedOrder,
+            deliveredOrder,
+            categories,
+            productCount,
+            productsOutOfStock,
+            allOrders,
+            allUsersDOB,
+            admins,
+            customers
+        ] = await Promise.all([
+            Order.countDocuments({ status: "Processing" }),
+            Order.countDocuments({ status: "Shipped" }),
+            Order.countDocuments({ status: "Delivered" }),
+            Product.distinct("category"),
+            Product.countDocuments(),
+            Product.countDocuments({ stock: 0 }),
+            Order.find({}).select(["total", "discount", "subtotal", "tax", "shippingCharges"]),
+            User.find({}).select(["dob"]),
+            User.countDocuments({ role: "admin" }),
+            User.countDocuments({ role: "user" })
+        ])
+
+        // for processing, shipped and delivered
+        const orderFullFillMent = {
+            processing: procesingOrder,
+            shipped: shippedOrder,
+            delivered: deliveredOrder
+        }
+
+        // For categories
+        const categoryCount: Record<string, number>[] = await getInventories({ categories, productCount })
+
+        // For stock availability
+        const stockAvailability = {
+            inStock: productCount - productsOutOfStock,
+            outOfStock: productsOutOfStock
+        }
+
+        // Revenue distribution
+        const grossIncome = allOrders.reduce((prev, order) => prev + (order.total || 0), 0)
+        const discount = allOrders.reduce((prev, order) => prev + (order.discount || 0), 0)
+        const productionCost = allOrders.reduce((prev, order) => prev + (order.shippingCharges || 0), 0)
+        const burn = allOrders.reduce((prev, order) => prev + (order.tax || 0), 0)
+        const marketingCost = Math.round(grossIncome * (20 / 100));
+        const netMargin = grossIncome - discount - productionCost - burn - marketingCost;
+        const revenueDistribution = {
+            netMargin,
+            productionCost,
+            burn,
+            marketingCost,
+            discount
+        };
+
+        // Customers and admins count
+        const adminCustomer = {
+            admin: admins,
+            customers
+        }
+
+        // User age group
+        const usersAgeGroup = {
+            teen: allUsersDOB.filter((i) => i.age < 20).length,
+            adult: allUsersDOB.filter((i) => i.age >= 20 && i.age < 40).length,
+            old: allUsersDOB.filter((i) => i.age >= 40).length,
+        }
+
+        charts = { orderFullFillMent, productCategories: categoryCount, productCount, stockAvailability, revenueDistribution, adminCustomer, usersAgeGroup }
+        myCache.set("admin-pie-chart", JSON.stringify(charts));
+    }
+    return res.status(200).json({
+        success: true,
+        charts,
+    });
+});
+
 export const getBarCharts = TryCatch(async () => { });
 export const getLineCharts = TryCatch(async () => { });
