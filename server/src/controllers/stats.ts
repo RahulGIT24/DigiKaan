@@ -89,7 +89,9 @@ export const getDashBoardStats = TryCatch(async (req, res, next) => {
             productCount,
             userCount,
             orderCount,
-            categories
+            categories,
+            femaleUsers,
+            latestTransactions
         ] = await Promise.all([
             thisMonthOrdersPromise,
             thisMonthUsersPromise,
@@ -101,7 +103,9 @@ export const getDashBoardStats = TryCatch(async (req, res, next) => {
             Product.countDocuments(),
             User.countDocuments(),
             Order.find({}).select("total"),
-            Product.distinct("category")
+            Product.distinct("category"),
+            User.countDocuments({gender:"female"}),
+            Order.find({}).select(["orderItems","discount","total","status"]).limit(4)
         ]);
 
 
@@ -150,12 +154,27 @@ export const getDashBoardStats = TryCatch(async (req, res, next) => {
             [category]: Math.round((categoriesCount[i] / productCount) * 100)
         }))
 
+        // Male female Ratio
+        const userRatio = {
+            male:userCount - femaleUsers,
+            female:femaleUsers
+        }
+
+        // Modifying latest transaction
+        const modifiedLatestTransaction = latestTransactions.map((i)=>({
+            _id: i._id,
+            discount: i.discount,
+            total:i.total,
+            status:i.status,
+            quantity:i.orderItems.length
+        }))
+
         stats = {
             thisMonthRevenue: calculatePercentage(thisMonthRevenue, lastMonthRevenue),
             user: calculatePercentage(thisMonthUsers.length, lastMonthUsers.length),
             order: calculatePercentage(thisMonthOrders.length, lastMonthOrders.length),
             product: calculatePercentage(thisMonthProducts.length, lastMonthProducts.length),
-            count, chart, categoryCount
+            count, chart, categoryCount, userRatio, latestTransactions:modifiedLatestTransaction
         }
 
         myCache.set("admin-stats", JSON.stringify(stats))
