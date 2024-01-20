@@ -11,6 +11,8 @@ export const getDashBoardStats = TryCatch(async (req, res, next) => {
         stats = JSON.parse(myCache.get("admin-stats") as string);
     else {
         const today = new Date(); // it is also the end of this month
+        const sixMonthsAgo = new Date();
+        sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6)
 
         // Current month
         const thisMonth = {
@@ -69,6 +71,13 @@ export const getDashBoardStats = TryCatch(async (req, res, next) => {
             },
         });
 
+        const lastSixMonthOrdersPromise = Order.find({
+            createdAt: {
+                $gte: sixMonthsAgo,
+                $lte: today,
+            },
+        });
+
         const [
             thisMonthOrders,
             thisMonthUsers,
@@ -76,9 +85,11 @@ export const getDashBoardStats = TryCatch(async (req, res, next) => {
             lastMonthOrders,
             lastMonthUsers,
             lastMonthProducts,
+            lastSixMonthOrders,
             productCount,
             userCount,
-            orderCount
+            orderCount,
+            categories
         ] = await Promise.all([
             thisMonthOrdersPromise,
             thisMonthUsersPromise,
@@ -86,9 +97,11 @@ export const getDashBoardStats = TryCatch(async (req, res, next) => {
             lastMonthOrdersPromise,
             lastMonthUsersPromise,
             lastMonthProductsPromise,
+            lastSixMonthOrdersPromise,
             Product.countDocuments(),
             User.countDocuments(),
-            Order.find({}).select("total")
+            Order.find({}).select("total"),
+            Product.distinct("category")
         ]);
 
 
@@ -112,12 +125,37 @@ export const getDashBoardStats = TryCatch(async (req, res, next) => {
             productCount, orderCount: orderCount.length, userCount
         }
 
+        // Last six months stats
+        const orderMonthCounts = new Array(6).fill(0);
+        const orderMontlyRevenue = new Array(6).fill(0);
+        lastSixMonthOrders.forEach((order) => {
+            const creationDate = order.createdAt
+            const monthDifference = today.getMonth() - creationDate.getMonth();
+            if (monthDifference < 6) {
+                // 0 based indexing so 6-1
+                orderMonthCounts[6 - 1 - monthDifference] += 1;
+                orderMontlyRevenue[6 - 1 - monthDifference] += order.total;
+            }
+        })
+        const chart = {
+            order: orderMonthCounts,
+            revenue: orderMontlyRevenue
+        }
+
+        // Inventory
+        const categoriesCountPromise = categories.map(category => Product.countDocuments({ category }))
+        const categoriesCount = await Promise.all(categoriesCountPromise);
+        const categoryCount: Record<string, number>[] = []
+        categories.forEach((category, i) => categoryCount.push({
+            [category]: Math.round((categoriesCount[i] / productCount) * 100)
+        }))
+
         stats = {
             thisMonthRevenue: calculatePercentage(thisMonthRevenue, lastMonthRevenue),
             user: calculatePercentage(thisMonthUsers.length, lastMonthUsers.length),
             order: calculatePercentage(thisMonthOrders.length, lastMonthOrders.length),
             product: calculatePercentage(thisMonthProducts.length, lastMonthProducts.length),
-            count,
+            count, chart, categoryCount
         }
 
         myCache.set("admin-stats", JSON.stringify(stats))
