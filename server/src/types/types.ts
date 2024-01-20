@@ -32,7 +32,9 @@ export interface BaseQuery {
 export interface invalidateCacheType {
     product?: boolean,
     order?: boolean,
-    admin?: boolean
+    admin?: boolean,
+    user?:string,
+    orderId?:string
 }
 
 export type OrderItemType = {

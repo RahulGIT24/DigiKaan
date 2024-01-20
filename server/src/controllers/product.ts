@@ -22,7 +22,7 @@ export const newProduct = TryCatch(
         await Product.create({
             name, category: category?.toLowerCase(), stock, price, photo: photo?.path
         })
-        await invalidateCache({ product: true })
+        await invalidateCache({ product: true, order:true })
         return res.status(201).json({
             success: true, message: "Product created successfully"
         })
@@ -116,7 +116,7 @@ export const updateProduct = TryCatch(async (req, res, next) => {
     if (category) product.category = category;
 
     await product.save();
-    await invalidateCache({ product: true })
+    await invalidateCache({ product: true, order:true })
     return res.status(200).json({
         success: true,
         message: "Product Updated Successfully",
@@ -134,7 +134,7 @@ export const deleteProduct = TryCatch(
             console.log("Product Photo Deleted");
         })
         await Product.findByIdAndDelete(id);
-        await invalidateCache({ product: true })
+        await invalidateCache({ product: true, order:true })
         return res.status(200).json({
             success: true, message: "Product deleted successfully"
         })
