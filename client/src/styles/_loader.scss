@@ -1,0 +1,5 @@
+.loader {
+    max-height: 80vh;
+    max-width: 100vw;
+    @include flex(column);
+}
