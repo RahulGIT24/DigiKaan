@@ -1,8 +1,7 @@
-import mongoose from "mongoose"
+import mongoose, { Document } from "mongoose"
 import { OrderItemType, invalidateCacheType } from "../types/types.js";
 import { myCache } from "../app.js";
 import { Product } from "../models/product.js";
-import { Order } from "../models/order.js";
 
 export const connectDB = async () => {
     try {
@@ -30,7 +29,7 @@ export const invalidateCache = async ({ product, order, user, orderId, admin = t
         myCache.del(orderKeys);
     }
     if (admin) {
-        const adminKeys: string[] = ["admin-stats", "admin-pie-chart"];
+        const adminKeys: string[] = ["admin-stats", "admin-pie-chart", "admin-bar-chart"];
         myCache.del(adminKeys)
     }
 }
@@ -63,4 +62,20 @@ export const getInventories = async ({ categories, productCount }: { categories:
         [category]: Math.round((categoriesCount[i] / productCount) * 100)
     }))
     return categoryCount;
+}
+
+
+interface MyDocument extends Document {
+    createdAt: Date
+}
+export const getBarChartData = ({ length, dataArr, today }: { length: number, dataArr: MyDocument[], today: Date }) => {
+    const data = new Array(length).fill(0);
+    dataArr.forEach((i) => {
+        const creationDate = i.createdAt
+        const monthDifference = (today.getMonth() - creationDate.getMonth() + 12) % 12;
+        if (monthDifference < length) {
+            data[length - 1 - monthDifference] += 1;
+        }
+    })
+    return data;
 }
