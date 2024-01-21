@@ -29,7 +29,7 @@ export const invalidateCache = async ({ product, order, user, orderId, admin = t
         myCache.del(orderKeys);
     }
     if (admin) {
-        const adminKeys: string[] = ["admin-stats", "admin-pie-chart", "admin-bar-chart"];
+        const adminKeys: string[] = ["admin-stats", "admin-pie-chart", "admin-bar-chart", "admin-line-chart"];
         myCache.del(adminKeys)
     }
 }
@@ -64,17 +64,25 @@ export const getInventories = async ({ categories, productCount }: { categories:
     return categoryCount;
 }
 
-
 interface MyDocument extends Document {
-    createdAt: Date
+    createdAt: Date,
+    discount?: number,
+    total?: number
 }
-export const getBarChartData = ({ length, dataArr, today }: { length: number, dataArr: MyDocument[], today: Date }) => {
+
+type FuncProps = {
+    length:number,
+    dataArr:MyDocument[],
+    today:Date,
+    property?:"discount"|"total"
+}
+export const getChartData = ({ length, dataArr, today, property }:FuncProps) => {
     const data = new Array(length).fill(0);
     dataArr.forEach((i) => {
         const creationDate = i.createdAt
         const monthDifference = (today.getMonth() - creationDate.getMonth() + 12) % 12;
         if (monthDifference < length) {
-            data[length - 1 - monthDifference] += 1;
+            data[length - 1 - monthDifference] += property ? i[property]! : 1;
         }
     })
     return data;
