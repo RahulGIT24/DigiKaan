@@ -2,9 +2,7 @@ import express from "express"
 import NodeCache from "node-cache";
 import { config } from "dotenv";
 const app = express();
-config({
-    path:"../.env"
-})
+config()
 app.use(express.json());
 const port = process.env.PORT || 5000;
 connectDB();
