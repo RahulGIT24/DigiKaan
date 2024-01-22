@@ -1,9 +1,11 @@
 import express from "express"
 import NodeCache from "node-cache";
 import { config } from "dotenv";
+import cors from "cors"
 const app = express();
 config()
 app.use(express.json());
+app.use(cors())
 
 const port = process.env.PORT || 5000;
 const stripeKey = process.env.STRIPE_KEY || "";
@@ -31,7 +33,7 @@ app.use("/api/v1/order", orderRoutes);
 app.use("/api/v1/payment", paymentRoute);
 app.use("/api/v1/dashboard", statsRoute);
 
-app.use("/uploads",express.static("uploads"))
+app.use("/uploads", express.static("uploads"))
 app.use(errorMiddleWare)
 
 app.listen(port, () => {
