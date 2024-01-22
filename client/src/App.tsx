@@ -3,6 +3,7 @@ import { lazy, Suspense } from "react";
 import Loader from "./components/Loader";
 import Header from "./components/Header";
 import OrderDetails from "./pages/orderDetails";
+import {Toaster} from "react-hot-toast"
 
 const Home = lazy(() => import("./pages/home"));
 const Search = lazy(() => import("./pages/search"));
@@ -85,6 +86,9 @@ const App = () => {
           {/* </Route> */}
         </Routes>
       </Suspense>
+      <Toaster
+      position="bottom-center"
+      />
       {/* Admin Routes */}
     </Router>
   );
