@@ -1,6 +1,6 @@
 import { Hourglass } from "react-loader-spinner";
 
-const Loader = () => {
+export const Loader = () => {
   return (
     <div className="loader">
       <Hourglass
@@ -16,4 +16,10 @@ const Loader = () => {
   );
 };
 
-export default Loader;
+export const SkeletonLoader = ({width = "unset"}:{width?:string})=>{
+  return <div className="skeleton-loader" style={{width}}>
+    <div className="skeleton-shape"></div>
+    <div className="skeleton-shape"></div>
+    <div className="skeleton-shape"></div>
+  </div>
+}

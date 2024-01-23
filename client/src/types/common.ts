@@ -7,3 +7,12 @@ export interface User{
     _id:string,
     role?:string
 }
+
+export interface Product{
+    name:string,
+    category:string,
+    photo:string,
+    _id:string,
+    price:number,
+    stock:number
+}
