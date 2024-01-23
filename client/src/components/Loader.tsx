@@ -16,10 +16,16 @@ export const Loader = () => {
   );
 };
 
-export const SkeletonLoader = ({width = "unset"}:{width?:string})=>{
+interface SkeletonProps {
+  width?:string,
+  length?:number
+}
+
+export const SkeletonLoader = ({width = "unset",length = 3}:SkeletonProps)=>{
+  const skeletons = Array.from({length},(_,idx)=>(
+    <div className="skeleton-shape" key={idx}></div>
+  ))
   return <div className="skeleton-loader" style={{width}}>
-    <div className="skeleton-shape"></div>
-    <div className="skeleton-shape"></div>
-    <div className="skeleton-shape"></div>
+    {skeletons}
   </div>
 }
