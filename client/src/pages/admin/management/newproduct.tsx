@@ -1,5 +1,10 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
+import { useSelector } from "react-redux";
+import { UserReducerInitialState } from "../../../types/reducer";
+import { useNewProductMutation } from "../../../redux/api/productApi";
+import { responseToast } from "../../../utils/features";
+import { useNavigate } from "react-router-dom";
 
 const NewProduct = () => {
   const [name, setName] = useState<string>("");
@@ -24,17 +29,37 @@ const NewProduct = () => {
       };
     }
   };
+  const { user } = useSelector(
+    (state: { userReducer: UserReducerInitialState }) => state.userReducer
+  );
+
+  const [newProduct] = useNewProductMutation();
+  const navigate = useNavigate();
+
+  const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!name || !price || !stock || !photo || !category) return;
+    const formData = new FormData();
+    formData.set("name", name);
+    formData.set("price", price.toString());
+    formData.set("stock", stock.toString());
+    formData.set("photo", photo);
+    formData.set("category", category);
+    const res = await newProduct({ id: user?._id as string, formData });
+    responseToast(res, navigate, "/admin/product");
+  };
 
   return (
     <div className="admin-container">
       <AdminSidebar />
       <main className="product-management">
         <article>
-          <form>
+          <form onSubmit={submitHandler}>
             <h2>New Product</h2>
             <div>
               <label>Name</label>
               <input
+                required
                 type="text"
                 placeholder="Name"
                 value={name}
@@ -44,6 +69,7 @@ const NewProduct = () => {
             <div>
               <label>Price</label>
               <input
+                required
                 type="number"
                 placeholder="Price"
                 value={price}
@@ -53,6 +79,8 @@ const NewProduct = () => {
             <div>
               <label>Stock</label>
               <input
+                required
+                min={0}
                 type="number"
                 placeholder="Stock"
                 value={stock}
@@ -63,6 +91,7 @@ const NewProduct = () => {
             <div>
               <label>Category</label>
               <input
+                required
                 type="text"
                 placeholder="eg. laptop, camera etc"
                 value={category}
@@ -72,7 +101,7 @@ const NewProduct = () => {
 
             <div>
               <label>Photo</label>
-              <input type="file" onChange={changeImageHandler} />
+              <input required type="file" onChange={changeImageHandler} />
             </div>
 
             {photoPrev && <img src={photoPrev} alt="New Image" />}
