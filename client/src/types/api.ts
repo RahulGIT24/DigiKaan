@@ -19,3 +19,20 @@ export type AllProductsResponse = {
     success: boolean,
     products: Product[]
 }
+
+export type CategoryResponse = {
+    success: boolean,
+    categories: string[]
+}
+
+export type SearchProductsResponse = AllProductsResponse & {
+    totalPage: number
+}
+
+export type SearchProductsParams = {
+    price: number,
+    page:number,
+    category:string,
+    search:string,
+    sort:string
+}
