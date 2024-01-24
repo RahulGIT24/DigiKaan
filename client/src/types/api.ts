@@ -41,3 +41,19 @@ export type NewProductRequest = {
     id:string,
     formData: FormData
 }
+
+export type ProductResponse = {
+    success: boolean,
+    product: Product
+}
+
+export type UpdateProductRequest = {
+    productId:string,
+    userId:string,
+    formData: FormData
+}
+
+export type DeleteProduct = {
+    productId:string,
+    userId:string,
+}
