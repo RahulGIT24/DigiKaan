@@ -7,9 +7,12 @@ import { CartReducerInitialState } from "../types/reducer";
 import { CartItem } from "../types/common";
 import {
   addToCart,
+  appliedDiscount,
   calculatePrice,
   removeFromCart,
 } from "../redux/reducer/cartReducer";
+import axios from "axios";
+import { server } from "../redux/store";
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -34,6 +37,17 @@ const Cart = () => {
 
   useEffect(() => {
     const id = setTimeout(() => {
+      axios
+        .get(`${server}/api/v1/payment/discount?coupon=${couponCode}`)
+        .then((res) => {
+          dispatch(appliedDiscount(res.data.discount));
+          setisValid(true);
+        })
+        .catch(() => {
+          dispatch(appliedDiscount(0));
+          dispatch(calculatePrice());
+          setisValid(false);
+        });
       if (Math.random() > 0.5) {
         setisValid(true);
       } else {
