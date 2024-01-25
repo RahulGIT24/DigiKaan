@@ -2,11 +2,17 @@ import { Link } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
 import { useLatestProductsQuery } from "../redux/api/productApi";
 import toast from "react-hot-toast";
-import { SkeletonLoader} from "../components/Loader";
+import { SkeletonLoader } from "../components/Loader";
+import { CartItem } from "../types/common";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../redux/reducer/cartReducer";
 
 const Home = () => {
-  const addToCart = () => {
-    console.log("added");
+  const dispatch = useDispatch();
+  const addToCartHandler = (cartItem: CartItem) => {
+    if (cartItem.stock < 1) return toast.error("Out of Stock");
+    dispatch(addToCart(cartItem));
+    toast.success("Added to cart");
   };
   const { data, isLoading, isError } = useLatestProductsQuery("");
   if (isError) toast.error("Can't fetch Products");
@@ -21,7 +27,7 @@ const Home = () => {
       </h1>
       <main>
         {isLoading ? (
-          <SkeletonLoader width="80vw"/>
+          <SkeletonLoader width="80vw" />
         ) : (
           data?.products.map((item) => (
             <ProductCard
@@ -30,7 +36,7 @@ const Home = () => {
               stock={item.stock}
               name={item.name}
               photo={item.photo}
-              handler={() => addToCart}
+              handler={addToCartHandler}
               key={item._id}
             />
           ))
