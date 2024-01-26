@@ -1,4 +1,4 @@
-import { Product, User } from "./common"
+import { CartItem, Order, Product, ShippingInfo, User } from "./common"
 
 export type CustomError = {
     status: number,
@@ -56,4 +56,31 @@ export type UpdateProductRequest = {
 export type DeleteProduct = {
     productId:string,
     userId:string,
+}
+
+export type NewOrderRequest = {
+    loading: boolean,
+    orderItems: CartItem[],
+    subTotal: number,
+    tax: number,
+    discount: number,
+    shippingCharges: number,
+    total: number,
+    shippingInfo: ShippingInfo,
+    user:string
+}
+
+export type OrdersResponse = {
+    success: boolean,
+    orders: Order[]
+}
+
+export type OrderDetailResponse = {
+    success: boolean,
+    order: Order
+}
+
+export type UpdateOrderRequest = {
+    userId:string,
+    orderId:string
 }
