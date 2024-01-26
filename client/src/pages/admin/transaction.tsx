@@ -75,7 +75,7 @@ const Transaction = () => {
                   : "purple"
               }
             >
-              i.status
+              {i.status}
             </span>
           ),
           action: <Link to={`/admin/transaction/${i._id}`}>Manage</Link>,
