@@ -15,6 +15,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 const Home = lazy(() => import("./pages/home"));
 const Search = lazy(() => import("./pages/search"));
 const Cart = lazy(() => import("./pages/cart"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 // Admin Routes Importing
 const Dashboard = lazy(() => import("./pages/admin/dashboard"));
@@ -116,7 +117,7 @@ const App = () => {
               element={<TransactionManagement />}
             />
           </Route>
-          {/* </Route> */}
+          <Route path="*" element={<NotFound/>}/>
         </Routes>
       </Suspense>
       <Toaster position="bottom-center" />
