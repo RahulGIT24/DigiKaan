@@ -84,3 +84,13 @@ export type UpdateOrderRequest = {
     userId:string,
     orderId:string
 }
+
+export type AllUsersResponse = {
+    success:boolean,
+    users:User
+}
+
+export type DeleteUserRequest = {
+    userId:string,
+    adminUserId:string
+}
