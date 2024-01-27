@@ -169,7 +169,11 @@ export const getDashBoardStats = TryCatch(async (req, res, next) => {
             user: calculatePercentage(thisMonthUsers.length, lastMonthUsers.length),
             order: calculatePercentage(thisMonthOrders.length, lastMonthOrders.length),
             product: calculatePercentage(thisMonthProducts.length, lastMonthProducts.length),
-            count, chart, categoryCount, userRatio, latestTransactions: modifiedLatestTransaction
+            count,
+            chart, 
+            categoryCount, 
+            userRatio, 
+            latestTransactions: modifiedLatestTransaction
         }
 
         myCache.set("admin-stats", JSON.stringify(stats))

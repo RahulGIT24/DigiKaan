@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { User } from "../models/user.js";
 import { NewUserRequestBody } from "../types/types.js";
 import ErrorHandler, { TryCatch } from "../utils/utility-class.js";
+import { invalidateCache } from "../utils/features.js";
 
 
 export const newUser = TryCatch(
@@ -11,7 +12,7 @@ export const newUser = TryCatch(
         let user = await User.findById(_id);
 
         if (user) {
-            res.status(200).json({
+            return res.status(200).json({
                 success: true,
                 message: `Welcome Back, ${user.name}`
             })
@@ -24,7 +25,7 @@ export const newUser = TryCatch(
         user = await User.create({
             _id, name, email, photo, gender, dob: new Date(dob)
         })
-
+        invalidateCache({admin:true})
         return res.status(201).json({
             success: true,
             message: `Welcome, ${user.name}`
@@ -59,7 +60,8 @@ export const delUser = TryCatch(
         const id = req.params.id;
         const user = await User.findById(id);
         if (!user) return next(new ErrorHandler("User not found", 400));
-        await user.deleteOne();
+        await User.findByIdAndDelete(id);
+        await invalidateCache({ admin: true})
         return res.status(200).json({
             success: true,
             messsage: "User Deleted"
