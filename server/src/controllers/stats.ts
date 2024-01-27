@@ -304,7 +304,7 @@ export const getBarCharts = TryCatch(async (req, res, next) => {
         const userCount = getChartData({ length: 6, today: today, dataArr: users })
         const orderCount = getChartData({ length: 12, today: today, dataArr: orders })
 
-        charts = { users: userCount, prodcuts: productCount, orders: orderCount }
+        charts = { users: userCount, products: productCount, orders: orderCount }
         myCache.set("admin-bar-chart", JSON.stringify(charts));
     }
     return res.status(200).json({
@@ -339,7 +339,7 @@ export const getLineCharts = TryCatch(async (req, res, next) => {
         const discount = getChartData({ length: 12, today: today, dataArr: orders, property: "discount" })
         const revenue = getChartData({ length: 12, today: today, dataArr: orders, property: "total" })
 
-        charts = { users: userCount, prodcuts: productCount, discount, revenue }
+        charts = { users: userCount, products: productCount, discount, revenue }
         myCache.set("admin-line-chart", JSON.stringify(charts));
     }
     return res.status(200).json({
