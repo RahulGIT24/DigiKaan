@@ -61,7 +61,7 @@ export type DeleteProduct = {
 export type NewOrderRequest = {
     loading?: boolean,
     orderItems: CartItem[],
-    subTotal: number,
+    subtotal: number,
     tax: number,
     discount: number,
     shippingCharges: number,

@@ -6,12 +6,27 @@ import { stripe } from "../app.js";
 
 export const createPaymentIntent = TryCatch(
     async (req: Request<{}, {}, CouponType>, res, next) => {
-        const { amount } = req.body;
+        const { amount, name } = req.body;
         if (!amount) return next(new ErrorHandler("Please enter amount", 400))
-        const paymentIntent = stripe.paymentIntents.create({amount:Number(amount*100),currency:"inr"});
+        const paymentIntent = await stripe.paymentIntents.create({
+            amount: Number(amount * 100),
+            currency: "inr",
+            description: "Digikaan Services",
+            shipping: {
+                name,
+                address: {
+                    line1: '510 Townsend St',
+                    postal_code: '98140',
+                    city: 'San Francisco',
+                    state: 'CA',
+                    country: 'US',
+                },
+            },
+            payment_method_types: ['card']
+        });
         return res.status(201).json({
             success: true,
-            clientSecret: (await paymentIntent).client_secret
+            clientSecret: paymentIntent.client_secret,
         })
     }
 )
@@ -55,7 +70,7 @@ export const deleteCoupon = TryCatch(
         if (!coupon) return next(new ErrorHandler("Coupon not found", 404))
         return res.status(200).json({
             success: true,
-            message:"Coupon Deleted!"
+            message: "Coupon Deleted!"
         })
     }
 )

@@ -8,7 +8,7 @@ export interface UserReducerInitialState {
 export interface CartReducerInitialState {
     loading: boolean,
     cartItems: CartItem[],
-    subTotal: number,
+    subtotal: number,
     tax: number,
     discount: number,
     shippingCharges: number,

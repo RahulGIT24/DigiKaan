@@ -28,7 +28,7 @@ const CheckOutForm = () => {
   const {
     shippingInfo,
     cartItems,
-    subTotal,
+    subtotal,
     tax,
     discount,
     shippingCharges,
@@ -48,7 +48,7 @@ const CheckOutForm = () => {
     const orderData: NewOrderRequest = {
       shippingInfo,
       orderItems: cartItems,
-      subTotal,
+      subtotal,
       tax,
       discount,
       shippingCharges,
@@ -64,6 +64,7 @@ const CheckOutForm = () => {
 
     if (error) {
       setIsProcessing(false);
+      console.log(error)
       return toast.error(error.message || "Something Went Wrong");
     }
 

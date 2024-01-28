@@ -17,7 +17,7 @@ const TransactionManagement = () => {
       city: "",
       state: "",
       country: "",
-      pinCode: "",
+      pincode: 0,
     },
     status: "",
     subtotal: 0,
@@ -43,7 +43,7 @@ const TransactionManagement = () => {
   const { isLoading, isError, data } = useOrderDetailsQuery(params.id!);
 
   const {
-    shippingInfo: { address, city, state, country, pinCode },
+    shippingInfo: { address, city, state, country, pincode },
     orderItems,
     user: { name },
     status,
@@ -88,7 +88,7 @@ const TransactionManagement = () => {
                 <ProductCard
                   key={i._id}
                   name={i.name}
-                  photo={`${server}/${i.photo}`}
+                  photo={i.photo}
                   productId={i.productId}
                   _id={i._id}
                   quantity={i.quantity}
@@ -106,7 +106,7 @@ const TransactionManagement = () => {
               <p>Name: {name}</p>
               <p>
                 Address:{" "}
-                {`${address}, ${city}, ${state}, ${country} ${pinCode}`}
+                {`${address}, ${city}, ${state}, ${country} ${pincode}`}
               </p>
               <h5>Amount Info</h5>
               <p>Subtotal: {subtotal}</p>

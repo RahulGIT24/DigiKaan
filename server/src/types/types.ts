@@ -33,8 +33,8 @@ export interface invalidateCacheType {
     product?: boolean,
     order?: boolean,
     admin?: boolean,
-    user?:string,
-    orderId?:string
+    user?: string,
+    orderId?: string
 }
 
 export type OrderItemType = {
@@ -63,7 +63,8 @@ export interface NewOrderRequestBody {
     orderItems: OrderItemType[]
 }
 
-export interface CouponType{
-    coupon:string,
-    amount:number
+export interface CouponType {
+    coupon: string,
+    amount: number,
+    name: string,
 }

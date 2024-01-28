@@ -2,7 +2,10 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { BiArrowBack } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { CartReducerInitialState, UserReducerInitialState } from "../types/reducer";
+import {
+  CartReducerInitialState,
+  UserReducerInitialState,
+} from "../types/reducer";
 import axios from "axios";
 import { server } from "../redux/store";
 import toast from "react-hot-toast";
@@ -13,7 +16,7 @@ const Shipping = () => {
   const { user } = useSelector(
     (state: { userReducer: UserReducerInitialState }) => state.userReducer
   );
-  const { cartItems,total } = useSelector(
+  const { cartItems, total } = useSelector(
     (state: { cartReducer: CartReducerInitialState }) => state.cartReducer
   );
   const [shippingInfo, setShippingInfo] = useState<ShippingInfo>({
@@ -21,7 +24,7 @@ const Shipping = () => {
     city: "",
     state: "",
     country: "",
-    pinCode: "",
+    pincode: 0,
   });
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -31,25 +34,30 @@ const Shipping = () => {
     setShippingInfo((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const submitHandler = async(e:FormEvent<HTMLFormElement>)=>{
+  const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(saveShippingInfo(shippingInfo))
+    dispatch(saveShippingInfo(shippingInfo));
     try {
-      const {data} = await axios.post(`${server}/api/v1/payment/create`,{
-        amount:total
-      },{
-        headers:{
-          "Content-Type":"application/json"
+      const { data } = await axios.post(
+        `${server}/api/v1/payment/create`,
+        {
+          amount: total,
+          name: user?.name,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
-      })
-      navigate("/pay",{
-        state:data.clientSecret
-      })
+      );
+      navigate("/pay", {
+        state: data.clientSecret,
+      });
     } catch (error) {
-      toast.error("Something Went Wrong")
-      console.log(error)
+      toast.error("Something Went Wrong");
+      console.log(error);
     }
-  }
+  };
 
   useEffect(() => {
     if (cartItems.length <= 0) return navigate("/cart");
@@ -103,10 +111,10 @@ const Shipping = () => {
         </select>
         <input
           type="number"
-          placeholder="Pincode"
-          name="pinCode"
+          placeholder="pincode"
+          name="pincode"
           required
-          value={shippingInfo.pinCode}
+          value={shippingInfo.pincode}
           onChange={changeShippingInfo}
         />
         <button type="submit">Submit</button>
