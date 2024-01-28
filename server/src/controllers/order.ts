@@ -2,7 +2,7 @@ import { Request } from "express";
 import { NewOrderRequestBody } from "../types/types.js";
 import ErrorHandler, { TryCatch } from "../utils/utility-class.js";
 import { Order } from "../models/order.js";
-import { invalidateCache, reduceStock } from "../utils/features.js";
+import { appendStock, invalidateCache, reduceStock } from "../utils/features.js";
 import { myCache } from "../app.js";
 
 export const newOrder = TryCatch(
@@ -80,7 +80,7 @@ export const processOrder = TryCatch(
                 break;
         }
         await order.save();
-        await invalidateCache({ product: false, order: true, admin: true, user:order.user, orderId:id })
+        await invalidateCache({ product: false, order: true, admin: true, user: order.user, orderId: id })
         res.status(201).json({
             success: true, message: "Order Processed Successfully"
         })
@@ -92,7 +92,10 @@ export const deleteOrder = TryCatch(
         const { id } = req.params;
         const order = await Order.findByIdAndDelete(id);
         if (!order) return next(new ErrorHandler("Order not found", 404));
-        await invalidateCache({ product: false, order: true, admin: true,  user:order.user, orderId:id})
+        if (order.status === "Processing" || order.status === "Shipped") {
+            await appendStock({ orderItems: order.orderItems });
+        }
+        await invalidateCache({ product: true, order: true, admin: true, user: order.user, orderId: id })
         res.status(201).json({
             success: true, message: "Order Deleted"
         })
