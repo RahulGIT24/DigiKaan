@@ -16,6 +16,7 @@ import {
 } from "react-icons/ri";
 import { Link, Location, useLocation } from "react-router-dom";
 import { IconType } from "react-icons";
+import logo from "../../assets/logo.png";
 
 const AdminSidebar = () => {
   const location = useLocation();
@@ -59,7 +60,10 @@ const AdminSidebar = () => {
             : {}
         }
       >
-        <h2>Logo.</h2>
+        <div className="logo-text">
+          <img src={logo}></img>
+          <h1>DigiKaan</h1>
+        </div>
         <DivOne location={location} />
         <DivTwo location={location} />
         <DivThree location={location} />
