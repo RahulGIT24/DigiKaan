@@ -78,7 +78,7 @@ const Orders = () => {
               {i.status}
             </span>
           ),
-          action: <Link to={`/admin/transaction/${i._id}`}>Manage</Link>,
+          action: user?.role==="admin" ? <Link to={`/admin/transaction/${i._id}`}>Manage</Link> : <></>,
         }))
       );
     }
