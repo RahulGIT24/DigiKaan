@@ -1,6 +1,4 @@
 import { BiMaleFemale } from "react-icons/bi";
-import { BsSearch } from "react-icons/bs";
-import { FaRegBell } from "react-icons/fa";
 import { HiTrendingDown, HiTrendingUp } from "react-icons/hi";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import { BarChart, DoughnutChart } from "../../components/admin/Charts";
@@ -23,6 +21,7 @@ const Dashboard = () => {
   }
 
   const stats = data?.stats!;
+  console.log(stats)
   return (
     <div className="admin-container">
       <AdminSidebar />
@@ -30,13 +29,6 @@ const Dashboard = () => {
         <SkeletonLoader length={20} />
       ) : (
         <main className="dashboard">
-          <div className="bar">
-            <BsSearch />
-            <input type="text" placeholder="Search for data, users, docs" />
-            <FaRegBell />
-            <img src={user?.photo} alt="User" />
-          </div>
-
           <section className="widget-container">
             <WidgetItem
               percent={stats?.thisMonthRevenue || 0}

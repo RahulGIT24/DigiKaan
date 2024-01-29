@@ -60,7 +60,7 @@ type Count = {
 
 type LatestTransaction = {
     _id: string,
-    amount: number,
+    total: number,
     discount: number,
     quantity: number,
     status: string
@@ -117,14 +117,14 @@ export type Pie = {
 }
 
 export type Bar = {
-        users: number[],
-        products: number[],
-        orders: number[]
+    users: number[],
+    products: number[],
+    orders: number[]
 }
 
 export type Line = {
-    users:number [],
-    products:number [],
-    discount:number [],
-    revenue:number []
+    users: number[],
+    products: number[],
+    discount: number[],
+    revenue: number[]
 }

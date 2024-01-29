@@ -52,7 +52,7 @@ body {
 
 .header {
   padding: 1rem;
-  @include flex(row, flex-end, stretch, 1.2rem);
+  @include flex(row, flex-end, center, 1.2rem);
 
   a {
     color: $color2;
@@ -91,18 +91,19 @@ body {
   }
 }
 
-.heading{
+.heading {
   @include heading;
   margin: 1rem 0;
   text-align: center
 }
 
-.container{
+.container {
   max-width: 1367px;
   width: 100%;
   margin: auto;
   overflow: auto;
-  >h1{
+
+  >h1 {
     @include heading;
     margin: 1rem 0;
     text-align: left;
@@ -287,22 +288,26 @@ body {
 }
 
 @keyframes skeleton-loading {
-  0%{
+  0% {
     opacity: 0.6;
-  }50%{
+  }
+
+  50% {
     opacity: 1;
-  }100%{
+  }
+
+  100% {
     opacity: 0.6;
   }
 }
 
-.skeleton-loader{
+.skeleton-loader {
   display: flex;
   flex-direction: column;
   margin-top: 2rem;
 }
 
-.skeleton-shape{
+.skeleton-shape {
   height: 30px;
   width: 100%;
   background-color: #ddd;
@@ -326,7 +331,8 @@ body {
 .not-found {
   height: 80vh;
   @include flex(column);
-  > svg {
+
+  >svg {
     font-size: 5rem;
   }
 }
@@ -335,10 +341,11 @@ body {
   max-width: 400px;
   width: 100%;
   margin: auto;
-  > form {
+
+  >form {
     @include flex(column, flex-start, stretch, 2rem);
 
-    > button {
+    >button {
       @include btn(1rem, $color3, $color1);
       width: 100%;
       font-size: 1.1rem;
@@ -346,7 +353,13 @@ body {
   }
 }
 
-.pie-head{
+.pie-head {
   font-size: xx-large;
   text-align: center;
+}
+
+.profile {
+  border: 1px solid black;
+  border-radius: 100px;
+  width: 2rem;
 }

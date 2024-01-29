@@ -60,7 +60,7 @@ const Header = ({ user }: PropsType) => {
               setIsOpen(!isOpen);
             }}
           >
-            <FaUser />
+            <img src={user.photo} className="profile" />
           </button>
           <dialog open={isOpen}>
             <div>

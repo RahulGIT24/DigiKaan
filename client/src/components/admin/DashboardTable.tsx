@@ -5,7 +5,7 @@ interface DataType {
   _id: string;
   quantity: number;
   discount: number;
-  amount: number;
+  total: number;
   status: string;
 }
 
@@ -24,7 +24,7 @@ const columns: Column<DataType>[] = [
   },
   {
     Header: "Amount",
-    accessor: "amount",
+    accessor: "total",
   },
   {
     Header: "Status",

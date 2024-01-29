@@ -8,7 +8,6 @@ import { myCache } from "../app.js";
 export const newOrder = TryCatch(
     async (req: Request<{}, {}, NewOrderRequestBody>, res, next) => {
         const { shippingInfo, orderItems, user, subtotal, tax, shippingCharges, discount, total } = req.body;
-        console.log(req.body)
         if (!shippingInfo || !user || !subtotal || !tax || !total) {
             return next(new ErrorHandler("Fill all the details!", 400))
         }
