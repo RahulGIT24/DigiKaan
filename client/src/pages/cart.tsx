@@ -16,7 +16,7 @@ import { server } from "../redux/store";
 
 const Cart = () => {
   const dispatch = useDispatch();
-  const { cartItems, subtotal:subTotal, tax, total, shippingCharges, discount } =
+  const { cartItems, subTotal, tax, total, shippingCharges, discount } =
     useSelector(
       (state: { cartReducer: CartReducerInitialState }) => state.cartReducer
     );

@@ -4,6 +4,7 @@ import {
   FaShoppingBag,
   FaSignInAlt,
   FaSignOutAlt,
+  FaUser,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { User } from "../types/common";

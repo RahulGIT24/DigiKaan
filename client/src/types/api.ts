@@ -87,7 +87,7 @@ export type UpdateOrderRequest = {
 
 export type AllUsersResponse = {
     success:boolean,
-    users:User[]
+    users:User
 }
 
 export type DeleteUserRequest = {
