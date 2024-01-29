@@ -18,7 +18,7 @@ interface DataType {
   name: string;
   email: string;
   gender: string;
-  role: string;
+  role: string | undefined;
   action: ReactElement;
 }
 
