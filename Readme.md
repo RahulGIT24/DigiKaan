@@ -50,7 +50,9 @@ It is created using Node Js, Typescript, React Js, Redux, MongoDB, Firebase, Exp
 
 2. Create a new `.env` file in server folder and add the environment variables as mentioned in `.env.sample` file
 
-3. Run `npm run dev` to start the server
+3. Please create and `uploads` folder in root directory
+
+4. Run `npm run dev` to start the server
 
 #### Frontend Setup
 
