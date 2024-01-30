@@ -1,12 +1,14 @@
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { server } from "../redux/store";
 import { Order, OrderItem } from "../types/common";
 import { useOrderDetailsQuery } from "../redux/api/orderApi";
 import { SkeletonLoader } from "../components/Loader";
 import { useSelector } from "react-redux";
 import { UserReducerInitialState } from "../types/reducer";
+import { useEffect } from "react";
 
 const OrderDetails = () => {
+  const navigate = useNavigate();
   const defaultData: Order = {
     shippingInfo: {
       address: "",
@@ -40,7 +42,7 @@ const OrderDetails = () => {
   const {
     shippingInfo: { address, city, state, country, pincode },
     orderItems,
-    user: { name,_id },
+    user: { name, _id },
     status,
     subtotal,
     total,
@@ -51,7 +53,13 @@ const OrderDetails = () => {
 
   if (isError) return <Navigate to={"/404"} />;
 
-  if(user?._id !== _id) return <Navigate to={"/"} />;
+  useEffect(() => {
+    if(_id){
+      if (user?._id !== _id) return navigate("/");
+
+    }
+  }, [user?._id, _id]);
+
   return (
     <main className="product-management">
       {isLoading ? (
