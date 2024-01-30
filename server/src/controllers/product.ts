@@ -4,7 +4,7 @@ import { BaseQuery, NewProductRequestBody } from "../types/types.js";
 import { Product } from "../models/product.js";
 import { rm } from "fs";
 import { myCache } from "../app.js";
-import { invalidateCache } from "../utils/features.js";
+import { deleteImageByUrl, invalidateCache, postImage } from "../utils/features.js";
 
 export const newProduct = TryCatch(
     async (req: Request<{}, {}, NewProductRequestBody>, res, next) => {
@@ -19,10 +19,17 @@ export const newProduct = TryCatch(
             })
             return next(new ErrorHandler("Please fill all fields", 400));
         }
+        const cloudinaryResponse = await postImage(req.file);
+        if (cloudinaryResponse.error) return res.status(400).json({
+            success: false, message: "Error while uploading image"
+        });
         await Product.create({
-            name, category: category?.toLowerCase(), stock, price, photo: photo?.path
+            name, category: category?.toLowerCase(), stock, price, photo: cloudinaryResponse.secure_url
         })
-        await invalidateCache({ product: true, order:true,admin:true })
+        rm(photo?.path, () => {
+            console.log("Deleted");
+        })
+        await invalidateCache({ product: true, order: true, admin: true })
         return res.status(201).json({
             success: true, message: "Product created successfully"
         })
@@ -103,12 +110,11 @@ export const updateProduct = TryCatch(async (req, res, next) => {
 
     if (!product) return next(new ErrorHandler("Product Not Found", 404));
 
-    if (photo) {
-        rm(product.photo!, () => {
-            console.log("Old Photo Deleted");
-        });
-        product.photo = photo.path;
-    }
+    const cloudinaryResponse = await postImage(req.file);
+    if (cloudinaryResponse.error) return res.status(400).json({
+        success: false, message: "Error while updating image!"
+    });
+    product.photo = cloudinaryResponse.secure_url;
 
     if (name) product.name = name;
     if (price) product.price = price;
@@ -116,7 +122,7 @@ export const updateProduct = TryCatch(async (req, res, next) => {
     if (category) product.category = category;
 
     await product.save();
-    await invalidateCache({ product: true, order:true,admin:true })
+    await invalidateCache({ product: true, order: true, admin: true })
     return res.status(200).json({
         success: true,
         message: "Product Updated Successfully",
@@ -130,11 +136,12 @@ export const deleteProduct = TryCatch(
         if (!product) {
             return next(new ErrorHandler("Product not found", 404))
         }
-        rm(product.photo, () => {
-            console.log("Product Photo Deleted");
-        })
+        // const imageDel = await deleteImageByUrl(product.photo);
+        // if (!imageDel) return res.status(400).json({
+        //     success: false, message: "Image can't be deleted"
+        // });
         await Product.findByIdAndDelete(id);
-        await invalidateCache({ product: true, order:true,admin:true })
+        await invalidateCache({ product: true, order: true, admin: true })
         return res.status(200).json({
             success: true, message: "Product deleted successfully"
         })

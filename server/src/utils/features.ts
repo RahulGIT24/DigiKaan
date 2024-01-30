@@ -2,6 +2,8 @@ import mongoose, { Document } from "mongoose"
 import { OrderItemType, invalidateCacheType } from "../types/types.js";
 import { myCache } from "../app.js";
 import { Product } from "../models/product.js";
+import cloudinary from 'cloudinary';
+import { v2 as cloudinaryV2 } from 'cloudinary';
 
 export const connectDB = async () => {
     try {
@@ -46,7 +48,7 @@ export const reduceStock = async (orderItems: OrderItemType[]) => {
     }
 }
 
-export const appendStock = async ({orderItems}:any) => {
+export const appendStock = async ({ orderItems }: any) => {
     console.log(orderItems)
     for (let i = 0; i < orderItems.length; i++) {
         const order = orderItems[i];
@@ -84,12 +86,12 @@ interface MyDocument extends Document {
 }
 
 type FuncProps = {
-    length:number,
-    dataArr:MyDocument[],
-    today:Date,
-    property?:"discount"|"total"
+    length: number,
+    dataArr: MyDocument[],
+    today: Date,
+    property?: "discount" | "total"
 }
-export const getChartData = ({ length, dataArr, today, property }:FuncProps) => {
+export const getChartData = ({ length, dataArr, today, property }: FuncProps) => {
     const data = new Array(length).fill(0);
     dataArr.forEach((i) => {
         const creationDate = i.createdAt
@@ -100,3 +102,45 @@ export const getChartData = ({ length, dataArr, today, property }:FuncProps) => 
     })
     return data;
 }
+
+export const postImage = async (image: any) => {
+    const CLOUD_NAME = process.env.CLOUD_NAME;
+    const UPLOAD_PRESET = process.env.UPLOAD_PRESET;
+    const fileData = await fetch(`${process.env.DOMAIN}/${image.path}`); 
+    const blobData = await fileData.blob();
+
+    const formData = new FormData();
+    formData.append('file', blobData, image.originalname); 
+    formData.append('upload_preset', UPLOAD_PRESET!);
+
+    const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUD_NAME!}/image/upload`,
+        {
+            method: 'POST',
+            body: formData,
+        }
+    );
+    const res = await response.json();
+    return res;
+};
+
+// TODO
+cloudinary.v2.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.CLOUD_API_KEY,
+    api_secret: process.env.CLOUD_API_SECRET, secure: true
+})
+
+export const deleteImageByUrl = async (imageUrl: any) => {
+    const publicId = imageUrl.split('/').pop().split('.')[0]!;
+    try {
+        await cloudinaryV2.api.delete_resources(
+            [publicId],
+            { type: 'upload', resource_type: 'image' }
+        );
+        return true;
+    } catch (e) {
+        console.log(e)
+        return false;
+    }
+};

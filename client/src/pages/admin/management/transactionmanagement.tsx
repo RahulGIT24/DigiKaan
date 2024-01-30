@@ -1,7 +1,6 @@
 import { FaTrash } from "react-icons/fa";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
-import { server } from "../../../redux/store";
 import { Order, OrderItem } from "../../../types/common";
 import { UserReducerInitialState } from "../../../types/reducer";
 import { useSelector } from "react-redux";
@@ -149,7 +148,7 @@ const ProductCard = ({
   productId,
 }: OrderItem) => (
   <div className="transaction-product-card">
-    <img src={`${server}/${photo}`} alt={name} />
+    <img src={`${photo}`} alt={name} />
     <Link to={`/product/${productId}`}>{name}</Link>
     <span>
       ₹{price} X {quantity} = ₹{price * quantity}
