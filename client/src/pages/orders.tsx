@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { UserReducerInitialState } from "../types/reducer";
 import toast from "react-hot-toast";
 import { CustomError } from "../types/api";
-import {useMyOrdersQuery } from "../redux/api/orderApi";
+import { useMyOrdersQuery } from "../redux/api/orderApi";
 import { SkeletonLoader } from "../components/Loader";
 
 type DataType = {
@@ -78,7 +78,12 @@ const Orders = () => {
               {i.status}
             </span>
           ),
-          action: user?.role==="admin" ? <Link to={`/admin/transaction/${i._id}`}>Manage</Link> : <></>,
+          action:
+            user?.role === "admin" ? (
+              <Link to={`/admin/transaction/${i._id}`}>Manage</Link>
+            ) : (
+              <Link to={`/orderdetails/${i._id}`}>View Order Details</Link>
+            ),
         }))
       );
     }
@@ -93,7 +98,7 @@ const Orders = () => {
   return (
     <div className="container">
       <h1 className="heading">My Orders</h1>
-      <main>{isLoading ? <SkeletonLoader length={20}/> : Table}</main>
+      <main>{isLoading ? <SkeletonLoader length={20} /> : Table}</main>
     </div>
   );
 };
