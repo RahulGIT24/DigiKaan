@@ -45,7 +45,7 @@ const Header = ({ user }: PropsType) => {
         <FaSearch />
       </Link>
       <Link
-        to={"/cart"}
+        to={`${user?._id ? `/cart`:"/login"}`}
         onClick={() => {
           setIsOpen(false);
         }}
