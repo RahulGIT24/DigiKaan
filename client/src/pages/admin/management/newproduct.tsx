@@ -13,6 +13,7 @@ const NewProduct = () => {
   const [stock, setStock] = useState<number>(1);
   const [photoPrev, setPhotoPrev] = useState<string>("");
   const [photo, setPhoto] = useState<File>();
+  const [disabled, setDisabled] = useState(false);
 
   const changeImageHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const file: File | undefined = e.target.files?.[0];
@@ -37,6 +38,7 @@ const NewProduct = () => {
   const navigate = useNavigate();
 
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
+    setDisabled(true);
     e.preventDefault();
     if (!name || !price || stock < 0 || !photo || !category) return;
     const formData = new FormData();
@@ -47,6 +49,7 @@ const NewProduct = () => {
     formData.set("category", category);
     const res = await newProduct({ id: user?._id as string, formData });
     responseToast(res, navigate, "/admin/product");
+    setDisabled(false);
   };
 
   return (
@@ -105,7 +108,9 @@ const NewProduct = () => {
             </div>
 
             {photoPrev && <img src={photoPrev} alt="New Image" />}
-            <button type="submit">Create</button>
+            <button type="submit" disabled={disabled}>
+              Create
+            </button>
           </form>
         </article>
       </main>

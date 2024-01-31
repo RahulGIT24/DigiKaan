@@ -2,7 +2,6 @@ import mongoose, { Document } from "mongoose"
 import { OrderItemType, invalidateCacheType } from "../types/types.js";
 import { myCache } from "../app.js";
 import { Product } from "../models/product.js";
-import cloudinary from 'cloudinary';
 import { v2 as cloudinaryV2 } from 'cloudinary';
 
 export const connectDB = async () => {
@@ -124,17 +123,10 @@ export const postImage = async (image: any) => {
     return res;
 };
 
-// TODO
-cloudinary.v2.config({
-    cloud_name: process.env.CLOUD_NAME,
-    api_key: process.env.CLOUD_API_KEY,
-    api_secret: process.env.CLOUD_API_SECRET, secure: true
-})
-
 export const deleteImageByUrl = async (imageUrl: any) => {
     const publicId = imageUrl.split('/').pop().split('.')[0]!;
     try {
-        await cloudinaryV2.api.delete_resources(
+        const res = await cloudinaryV2.api.delete_resources(
             [publicId],
             { type: 'upload', resource_type: 'image' }
         );

@@ -17,7 +17,7 @@ const Productmanagement = () => {
     (state: { userReducer: UserReducerInitialState }) => state.userReducer
   );
   const params = useParams();
-  const { data, isLoading,isError } = useProductDetailsQuery(params.id!);
+  const { data, isLoading, isError } = useProductDetailsQuery(params.id!);
   const { photo, category, name, stock, price, _id } = data?.product || {
     photo: "",
     category: "",
@@ -33,6 +33,7 @@ const Productmanagement = () => {
   const [categoryUpdate, setCategoryUpdate] = useState<string>(category);
   const [photoUpdate, setPhotoUpdate] = useState<string>("");
   const [photoFile, setPhotoFile] = useState<File>();
+  const [disabled, setDisabled] = useState(false);
 
   const [updateProduct] = useUpdateProductMutation();
   const [deleteProduct] = useDeleteProductMutation();
@@ -54,6 +55,7 @@ const Productmanagement = () => {
   };
   const navigate = useNavigate();
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
+    setDisabled(true);
     e.preventDefault();
     const formData = new FormData();
     if (nameUpdate) formData.set("name", nameUpdate);
@@ -66,11 +68,14 @@ const Productmanagement = () => {
       userId: user?._id!,
       formData,
     });
+    setDisabled(false);
     responseToast(res, navigate, "/admin/product");
   };
 
   const deleteHandler = async () => {
+    setDisabled(true);
     const res = await deleteProduct({ userId: user?._id!, productId: _id });
+    setDisabled(false);
     responseToast(res, navigate, "/admin/product");
   };
 
@@ -82,7 +87,7 @@ const Productmanagement = () => {
       setCategoryUpdate(data.product.category);
     }
   }, [data]);
-  if(isError) return <Navigate to={"/404"}/>
+  if (isError) return <Navigate to={"/404"} />;
   return (
     <div className="admin-container">
       <AdminSidebar />
@@ -103,7 +108,11 @@ const Productmanagement = () => {
               <h3>₹{price}</h3>
             </section>
             <article>
-              <button className="product-delete-btn" onClick={deleteHandler}>
+              <button
+                className="product-delete-btn"
+                onClick={deleteHandler}
+                disabled={disabled}
+              >
                 <FaTrash />
               </button>
               <form onSubmit={submitHandler}>
@@ -152,7 +161,9 @@ const Productmanagement = () => {
                 </div>
 
                 {photoUpdate && <img src={photoUpdate} alt="New Image" />}
-                <button type="submit">Update</button>
+                <button type="submit" disabled={disabled}>
+                  Update
+                </button>
               </form>
             </article>
           </>

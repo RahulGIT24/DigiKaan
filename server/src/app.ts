@@ -2,6 +2,8 @@ import express from "express"
 import NodeCache from "node-cache";
 import { config } from "dotenv";
 import cors from "cors"
+import cloudinary from 'cloudinary';
+
 const app = express();
 config()
 app.use(express.json());
@@ -10,6 +12,11 @@ app.use(cors())
 const port = process.env.PORT || 5000;
 const stripeKey = process.env.STRIPE_KEY || "";
 
+cloudinary.v2.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.CLOUD_API_KEY,
+    api_secret: process.env.CLOUD_API_SECRET, secure: true
+})
 connectDB();
 
 export const myCache = new NodeCache()
