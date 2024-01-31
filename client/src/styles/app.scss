@@ -363,3 +363,55 @@ body {
   border-radius: 100px;
   width: 2rem;
 }
+
+.quantity {
+  @include flex;
+  margin-top: 2rem;
+
+  >button {
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 0.5rem;
+    width: 3rem;
+    font-size: x-large;
+    background: white;
+    text-align: center;
+    color: black;
+    margin: auto;
+  };
+  >button:hover{
+    background-color: black;
+    color: white;
+  }
+}
+
+.cart-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem
+}
+
+;
+
+.addtocart {
+  @include flex;
+  color: white;
+  cursor: pointer;
+  border: none;
+  background: rgb(0, 104, 136);
+  padding: 0.3rem 4rem;
+  border-radius: 14px;
+  font-size: x-large;
+  text-align: center;
+}
+
+.single-product{
+  >h1{
+    margin-bottom: 2rem;
+    font-weight: 300;
+  }>p{
+    font-size: x-large;
+    margin-bottom: 7px;
+  }
+}

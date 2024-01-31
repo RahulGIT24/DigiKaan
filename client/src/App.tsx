@@ -39,6 +39,9 @@ const ProductManagement = lazy(
 const TransactionManagement = lazy(
   () => import("./pages/admin/management/transactionmanagement")
 );
+const Product = lazy(
+  () => import("./pages/product")
+);
 
 const App = () => {
   const { user, loading } = useSelector(
@@ -65,6 +68,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/search" element={<Search />} />
+          <Route path="/product/:id" element={<Product />} />
 
           {/* Not logged in route */}
           <Route

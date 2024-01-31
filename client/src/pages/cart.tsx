@@ -16,10 +16,16 @@ import { server } from "../redux/store";
 
 const Cart = () => {
   const dispatch = useDispatch();
-  const { cartItems, subtotal:subTotal, tax, total, shippingCharges, discount } =
-    useSelector(
-      (state: { cartReducer: CartReducerInitialState }) => state.cartReducer
-    );
+  const {
+    cartItems,
+    subtotal: subTotal,
+    tax,
+    total,
+    shippingCharges,
+    discount,
+  } = useSelector(
+    (state: { cartReducer: CartReducerInitialState }) => state.cartReducer
+  );
   const [couponCode, setCouponCode] = useState<string>("");
   const [isValid, setisValid] = useState<boolean>(false);
 

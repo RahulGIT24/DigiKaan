@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { AllProductsResponse, CategoryResponse, DeleteProduct, MessageResponse, NewProductRequest, ProductResponse, SearchProductsParams, SearchProductsResponse, UpdateProductRequest } from "../../types/api";
+import { AllProductsResponse, CategoryResponse, DeleteProduct, MessageResponse, NewProductRequest, ProductResponse, SearchProductsParams, SearchProductsResponse, SingleProductResponse, UpdateProductRequest } from "../../types/api";
 
 export const productApi = createApi({
     reducerPath: "productApi",
@@ -8,6 +8,7 @@ export const productApi = createApi({
     endpoints: (builder) => ({
         latestProducts: builder.query<AllProductsResponse, string>({ query: () => "latest", providesTags: ["product"] }),
         allProducts: builder.query<AllProductsResponse, string>({ query: (id) => `admin-products?id=${id}`, providesTags: ["product"] }),
+        singleProduct: builder.query<SingleProductResponse, string>({ query: (id) => `${id}`, providesTags: ["product"] }),
         categories: builder.query<CategoryResponse, string>({ query: () => `categories`, providesTags: ["product"] }),
         searchProducts: builder.query<SearchProductsResponse, SearchProductsParams>({
             query: ({ price, search, sort, category, page }) => {
@@ -42,4 +43,4 @@ export const productApi = createApi({
     })
 })
 
-export const { useLatestProductsQuery, useAllProductsQuery, useCategoriesQuery, useSearchProductsQuery, useNewProductMutation, useProductDetailsQuery,useUpdateProductMutation,useDeleteProductMutation } = productApi
+export const { useLatestProductsQuery, useAllProductsQuery, useCategoriesQuery, useSearchProductsQuery, useNewProductMutation, useProductDetailsQuery,useUpdateProductMutation,useDeleteProductMutation,useSingleProductQuery } = productApi

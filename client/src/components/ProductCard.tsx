@@ -1,4 +1,4 @@
-import { FaPlus, FaSignInAlt } from "react-icons/fa";
+import { FaEye, FaPlus, FaSignInAlt } from "react-icons/fa";
 import { CartItem } from "../types/common";
 import { UserReducerInitialState } from "../types/reducer";
 import { useSelector } from "react-redux";
@@ -12,7 +12,6 @@ type ProductProps = {
   name: string;
   handler: (cartItem: CartItem) => string | undefined;
 };
-
 
 const ProductCard = ({
   photo,
@@ -32,29 +31,39 @@ const ProductCard = ({
       <p>{name}</p>
       <span>₹{price}</span>
       <div>
-        {
-          user?._id ? 
         <button
-          onClick={() =>
-            handler({
-              productId,
-              photo,
-              price,
-              stock,
-              name,
-              quantity: 1,
-            })
-          }
+          onClick={() => {
+            navigate(`/product/${productId}`);
+          }}
         >
-          <FaPlus />
-        </button>:<>
-        <button
-          onClick={() =>{navigate("/login")}}
-        >
-          <FaSignInAlt />
+          <FaEye />
         </button>
-        </>
-        }
+        {user?._id ? (
+          <button
+            onClick={() =>
+              handler({
+                productId,
+                photo,
+                price,
+                stock,
+                name,
+                quantity: 1,
+              })
+            }
+          >
+            <FaPlus />
+          </button>
+        ) : (
+          <>
+            <button
+              onClick={() => {
+                navigate("/login");
+              }}
+            >
+              <FaSignInAlt />
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

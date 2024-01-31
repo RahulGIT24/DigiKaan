@@ -31,14 +31,14 @@ export type SearchProductsResponse = AllProductsResponse & {
 
 export type SearchProductsParams = {
     price: number,
-    page:number,
-    category:string,
-    search:string,
-    sort:string
+    page: number,
+    category: string,
+    search: string,
+    sort: string
 }
 
 export type NewProductRequest = {
-    id:string,
+    id: string,
     formData: FormData
 }
 
@@ -48,14 +48,14 @@ export type ProductResponse = {
 }
 
 export type UpdateProductRequest = {
-    productId:string,
-    userId:string,
+    productId: string,
+    userId: string,
     formData: FormData
 }
 
 export type DeleteProduct = {
-    productId:string,
-    userId:string,
+    productId: string,
+    userId: string,
 }
 
 export type NewOrderRequest = {
@@ -67,7 +67,7 @@ export type NewOrderRequest = {
     shippingCharges: number,
     total: number,
     shippingInfo: ShippingInfo,
-    user:string
+    user: string
 }
 
 export type OrdersResponse = {
@@ -81,18 +81,18 @@ export type OrderDetailResponse = {
 }
 
 export type UpdateOrderRequest = {
-    userId:string,
-    orderId:string
+    userId: string,
+    orderId: string
 }
 
 export type AllUsersResponse = {
-    success:boolean,
-    users:User[]
+    success: boolean,
+    users: User[]
 }
 
 export type DeleteUserRequest = {
-    userId:string,
-    adminUserId:string
+    userId: string,
+    adminUserId: string
 }
 
 export type StatsResponse = {
@@ -113,4 +113,9 @@ export type BarResponse = {
 export type LineResponse = {
     success: boolean,
     charts: Line
+}
+
+export type SingleProductResponse = {
+    success: boolean,
+    product: Product
 }
