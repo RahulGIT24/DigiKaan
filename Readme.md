@@ -31,6 +31,8 @@ It is created using Node Js, Typescript, React Js, Redux, MongoDB, Firebase, Exp
 ## What your customers will see?
 #### Home
 ![alt text](assets/home.png)
+#### Product Info Page
+![alt text](assets/singleProduct.png)
 #### Search
 ![alt text](assets/Search.png)
 #### Cart
