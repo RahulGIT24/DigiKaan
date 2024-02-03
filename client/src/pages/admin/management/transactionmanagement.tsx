@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { useDeleteOrderMutation, useOrderDetailsQuery, useUpdateOrderMutation } from "../../../redux/api/orderApi";
 import { SkeletonLoader } from "../../../components/Loader";
 import { responseToast } from "../../../utils/features";
+import { useState } from "react";
 
 const TransactionManagement = () => {
   const navigate = useNavigate();
@@ -38,6 +39,7 @@ const TransactionManagement = () => {
     const [updateOrder] = useUpdateOrderMutation();
     const [deleteOrder] = useDeleteOrderMutation();
   const params = useParams();
+  const [disabled,setDisabled] = useState<boolean>(false);
 
   const { isLoading, isError, data } = useOrderDetailsQuery(params.id!);
 
@@ -54,16 +56,20 @@ const TransactionManagement = () => {
   } = data?.order || defaultData;
 
   const updateHandler = async() => {
+    setDisabled(true);
     const res = await updateOrder({
       userId:user?._id as string ,orderId:data?.order._id as string
     })
+    setDisabled(false);
     responseToast(res,navigate,"/admin/transaction")
   };
 
   const deleteHandler = async() => {
+    setDisabled(true);
     const res = await deleteOrder({
       userId:user?._id as string ,orderId:data?.order._id as string
     })
+    setDisabled(false);
     responseToast(res,navigate,"/admin/transaction")
   };
 
@@ -129,7 +135,7 @@ const TransactionManagement = () => {
                   {status}
                 </span>
               </p>
-              <button className="shipping-btn" onClick={updateHandler}>
+              <button className="shipping-btn" onClick={updateHandler} disabled={disabled}>
                 Process Status
               </button>
             </article>

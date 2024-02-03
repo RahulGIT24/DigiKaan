@@ -3,6 +3,7 @@ import { OrderItemType, invalidateCacheType } from "../types/types.js";
 import { myCache } from "../app.js";
 import { Product } from "../models/product.js";
 import { v2 as cloudinaryV2 } from 'cloudinary';
+import nodemailer from "nodemailer"
 
 export const connectDB = async () => {
     try {
@@ -105,11 +106,11 @@ export const getChartData = ({ length, dataArr, today, property }: FuncProps) =>
 export const postImage = async (image: any) => {
     const CLOUD_NAME = process.env.CLOUD_NAME;
     const UPLOAD_PRESET = process.env.UPLOAD_PRESET;
-    const fileData = await fetch(`${process.env.DOMAIN}/${image.path}`); 
+    const fileData = await fetch(`${process.env.DOMAIN}/${image.path}`);
     const blobData = await fileData.blob();
 
     const formData = new FormData();
-    formData.append('file', blobData, image.originalname); 
+    formData.append('file', blobData, image.originalname);
     formData.append('upload_preset', UPLOAD_PRESET!);
 
     const response = await fetch(
@@ -136,3 +137,41 @@ export const deleteImageByUrl = async (imageUrl: any) => {
         return false;
     }
 };
+
+// Creating Transport for nodemailer
+
+
+export const mail = async ({ email, emailType, id }: { email: string, emailType: string, id: string }) => {
+    try {
+        await nodemailer.createTestAccount();
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.MAIL_ADDRESS,
+                pass: process.env.MAIL_PASSWORD
+            }
+        });
+        let subject = "";
+        let html = "";
+        if (emailType === "ORDERED") {
+            subject = "DigiKaan Order Placed Successfully!"
+            html = `<p>Congratulations Your <a href="${process.env.FRONTEND_DOMAIN}/orderdetails/${id}">order</a> has been placed!. Track your order now.`
+        } else if (emailType === "SHIPPED") {
+            subject = "DigiKaan Order Shipped Successfully!"
+            html = `<p>Congratulations Your <a href="${process.env.FRONTEND_DOMAIN}/orderdetails/${id}">order</a> has been shipped!. Track your order now.`
+        } else if (emailType === "DELIVERED") {
+            subject = "DigiKaan Order Delivered Successfully!"
+            html = `<p>Congratulations Your <a href="${process.env.FRONTEND_DOMAIN}/orderdetails/${id}">order</a> has been delivered!. Track your order now.</p>`
+        }
+        const mailOptions = {
+            from: process.env.MAIL_ADDRESS,
+            to: email,
+            subject,
+            html
+        };
+        await transporter.sendMail(mailOptions);
+    } catch (e) {
+        console.log(e);
+        throw new Error("Can't send email")
+    }
+}
