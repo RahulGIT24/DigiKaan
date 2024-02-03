@@ -55,7 +55,6 @@ const Shipping = () => {
       });
     } catch (error) {
       toast.error("Something Went Wrong");
-      console.log(error);
     }
   };
 

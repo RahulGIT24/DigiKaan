@@ -41,7 +41,6 @@ const Search = () => {
     category,
     page,
   });
-  console.log(searchedData);
 
   const isNextPage = page < 4;
   const isPreviousPage = page > 1;

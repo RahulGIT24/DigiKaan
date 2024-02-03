@@ -64,7 +64,6 @@ const CheckOutForm = () => {
 
     if (error) {
       setIsProcessing(false);
-      console.log(error)
       return toast.error(error.message || "Something Went Wrong");
     }
 

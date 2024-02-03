@@ -64,7 +64,6 @@ const Coupon = () => {
       return;
     } catch (e) {
       toast.error("Coupon is not added. Error Occured!");
-      console.log(e);
     }
   };
 
