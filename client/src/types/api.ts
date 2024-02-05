@@ -20,6 +20,11 @@ export type AllProductsResponse = {
     products: Product[]
 }
 
+export type ProductResponse = {
+    success: boolean,
+    product: Product
+}
+
 export type CategoryResponse = {
     success: boolean,
     categories: string[]
@@ -42,11 +47,6 @@ export type NewProductRequest = {
     formData: FormData
 }
 
-export type ProductResponse = {
-    success: boolean,
-    product: Product
-}
-
 export type UpdateProductRequest = {
     productId: string,
     userId: string,
@@ -56,6 +56,18 @@ export type UpdateProductRequest = {
 export type DeleteProduct = {
     productId: string,
     userId: string,
+}
+
+export type DeleteReview = {
+    productId: string,
+    reviewId: string,
+}
+
+export type ReviewRequest = {
+    productId: string,
+    review: string,
+    stars:number,
+    userId:string, 
 }
 
 export type NewOrderRequest = {

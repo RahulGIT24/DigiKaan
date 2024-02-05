@@ -8,13 +8,21 @@ export type User = {
     role?: string
 }
 
+interface Review {
+    stars: number,
+    review: string,
+    user: User,
+    _id: string
+}
+
 export interface Product {
     name: string,
     category: string,
     photo: string,
     _id: string,
     price: number,
-    stock: number
+    stock: number,
+    reviews?: Review[]
 }
 
 export type ShippingInfo = {

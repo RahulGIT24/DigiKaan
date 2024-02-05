@@ -378,8 +378,11 @@ body {
     text-align: center;
     color: black;
     margin: auto;
-  };
-  >button:hover{
+  }
+
+  ;
+
+  >button:hover {
     background-color: black;
     color: white;
   }
@@ -406,12 +409,81 @@ body {
   text-align: center;
 }
 
-.single-product{
-  >h1{
+.single-product {
+  >h1 {
     margin-bottom: 2rem;
     font-weight: 300;
-  }>p{
+  }
+
+  >p {
     font-size: x-large;
     margin-bottom: 7px;
+  }
+}
+
+.review {
+  @include flex(row, start);
+  margin-top: 1rem;
+  border: 1px solid black;
+  padding: 1.3rem;
+  border-radius: 2rem;
+
+  >img {
+    border: 1px solid black;
+    border-radius: 12rem;
+    width: 4rem;
+  }
+
+  ;
+
+  ;
+
+  >.text b {
+    font-size: x-large;
+  }
+}
+
+.reviews {
+  margin-top: 2rem;
+}
+
+.review-article {
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.review-function {
+  @include flex(row, space-between);
+  width: 100vw;
+
+  >.button:hover {
+    cursor: pointer;
+    color: red;
+  }
+
+  ;
+
+  .star {
+    width: 1rem;
+  }
+}
+
+.review-box {
+  @include flex(column, start, start);
+  margin-top: 2rem;
+
+  >textarea {
+    margin: 0.5rem 0;
+    padding-left: 0.7rem;
+    outline: none;
+    border: 1px solid black;
+    border-radius: 1rem;
+    padding-top: 0.5rem;
+  }
+
+  ;
+
+  >h1 {
+    text-align: left;
   }
 }

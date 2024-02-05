@@ -20,8 +20,19 @@ const schema = new mongoose.Schema({
     category: {
         type: String,
         required: [true, "Please enter product's category"],
-        trim:true
-    }
+        trim: true
+    },
+    reviews: [
+        {
+            stars: { type: String, required: [true, "Provide stars"] },
+            review: { type: String, required: [true, "Provide review"] },
+            user: {
+                type: String,
+                ref: "User",
+                required: true
+            },
+        }
+    ]
 }, {
     timestamps: true
 })

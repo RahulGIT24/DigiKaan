@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { AllProductsResponse, CategoryResponse, DeleteProduct, MessageResponse, NewProductRequest, ProductResponse, SearchProductsParams, SearchProductsResponse, SingleProductResponse, UpdateProductRequest } from "../../types/api";
+import { AllProductsResponse, CategoryResponse, DeleteProduct, DeleteReview, MessageResponse, NewProductRequest, ProductResponse, ReviewRequest, SearchProductsParams, SearchProductsResponse, SingleProductResponse, UpdateProductRequest } from "../../types/api";
 
 export const productApi = createApi({
     reducerPath: "productApi",
@@ -10,6 +10,7 @@ export const productApi = createApi({
         allProducts: builder.query<AllProductsResponse, string>({ query: (id) => `admin-products?id=${id}`, providesTags: ["product"] }),
         singleProduct: builder.query<SingleProductResponse, string>({ query: (id) => `${id}`, providesTags: ["product"] }),
         categories: builder.query<CategoryResponse, string>({ query: () => `categories`, providesTags: ["product"] }),
+        productDetails: builder.query<ProductResponse, string>({ query: (id) => id, providesTags: ["product"] }),
         searchProducts: builder.query<SearchProductsResponse, SearchProductsParams>({
             query: ({ price, search, sort, category, page }) => {
                 let base = `all?search=${search}&page=${page}`
@@ -26,7 +27,6 @@ export const productApi = createApi({
                 body: formData
             }), invalidatesTags: ["product"]
         }),
-        productDetails: builder.query<ProductResponse, string>({ query: (id) => id, providesTags: ["product"] }),
         updateProduct: builder.mutation<MessageResponse, UpdateProductRequest>({
             query: ({ userId, productId, formData }) => ({
                 url: `${productId}?id=${userId}`,
@@ -40,7 +40,22 @@ export const productApi = createApi({
                 method: "DELETE",
             }), invalidatesTags: ["product"]
         }),
+        deleteReview: builder.mutation<MessageResponse, DeleteReview>({
+            query: ({ reviewId, productId }) => ({
+                url: `delete-review?productId=${productId}&reviewId=${reviewId}`,
+                method: "DELETE",
+            }), invalidatesTags: ["product"]
+        }),
+        postReviews: builder.mutation<MessageResponse, ReviewRequest>({
+            query: ({ stars, productId, review, userId }) => ({
+                url: `post-review`,
+                method: "PUT",
+                body: {
+                    stars, productId, review, userId
+                }
+            }), invalidatesTags: ["product"]
+        }),
     })
 })
 
-export const { useLatestProductsQuery, useAllProductsQuery, useCategoriesQuery, useSearchProductsQuery, useNewProductMutation, useProductDetailsQuery,useUpdateProductMutation,useDeleteProductMutation,useSingleProductQuery } = productApi
+export const { useLatestProductsQuery, useAllProductsQuery, useCategoriesQuery, useSearchProductsQuery, useNewProductMutation, useUpdateProductMutation, useDeleteProductMutation, useSingleProductQuery, useDeleteReviewMutation,usePostReviewsMutation,useProductDetailsQuery } = productApi

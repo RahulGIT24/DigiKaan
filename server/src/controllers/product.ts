@@ -1,10 +1,11 @@
 import { Request } from "express";
 import ErrorHandler, { TryCatch } from "../utils/utility-class.js";
-import { BaseQuery, NewProductRequestBody } from "../types/types.js";
+import { BaseQuery, NewProductRequestBody, ReviewRequestBody } from "../types/types.js";
 import { Product } from "../models/product.js";
 import { rm } from "fs";
 import { myCache } from "../app.js";
 import { deleteImageByUrl, invalidateCache, postImage } from "../utils/features.js";
+
 
 export const newProduct = TryCatch(
     async (req: Request<{}, {}, NewProductRequestBody>, res, next) => {
@@ -32,6 +33,48 @@ export const newProduct = TryCatch(
         await invalidateCache({ product: true, order: true, admin: true })
         return res.status(201).json({
             success: true, message: "Product created successfully"
+        })
+    }
+)
+
+export const postReviews = TryCatch(
+    async (req: Request<{}, {}, ReviewRequestBody>, res, next) => {
+        const { stars, review, userId, productId } = req.body;
+        if (!stars && !review && !userId && !productId) {
+            return next(new ErrorHandler("Please provide all information", 400));
+        }
+        const product = await Product.findById(productId);
+        if (!product) return next(new ErrorHandler("Product Not found", 404));
+        product?.reviews.push({
+            stars: stars,
+            review: review,
+            user: userId
+        })
+        await product?.save();
+        await invalidateCache({ product: true })
+        return res.status(201).json({
+            success: true, message: "Review Posted Successfully"
+        })
+    }
+)
+
+export const deleteReview = TryCatch(
+    async (req, res, next) => {
+        const { reviewId, productId } = req.query;
+        if (!reviewId && !productId) {
+            return next(new ErrorHandler("Invalid Query", 400));
+        }
+        const product = await Product.findById(productId);
+        if(!product){
+            return next(new ErrorHandler("Product not found", 400));
+        }
+        await Product.updateOne(
+            { _id: productId },
+            { $pull: { reviews: { _id: reviewId } } }
+        );
+        await invalidateCache({ product: true })
+        return res.status(201).json({
+            success: true, message: "Review Deleted"
         })
     }
 )
@@ -92,7 +135,7 @@ export const getSingleProduct = TryCatch(
         if (myCache.has(`product ${id}`)) {
             product = JSON.parse(myCache.get(`product ${id}`) as string)
         } else {
-            product = await Product.findById(id);
+            product = await Product.findById(id).populate('reviews.user');
             myCache.set(`product ${id}`, JSON.stringify(product));
         }
 

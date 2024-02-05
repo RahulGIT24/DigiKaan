@@ -16,6 +16,14 @@ export interface NewProductRequestBody {
     stock: number
 }
 
+
+export interface ReviewRequestBody {
+    stars: number,
+    review: string,
+    userId:string,
+    productId:string
+}
+
 export type Controller = (req: Request, res: Response, next: NextFunction) => Promise<void | Response<any, Record<string, any>>>
 
 export interface BaseQuery {
