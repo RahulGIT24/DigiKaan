@@ -9,8 +9,10 @@ import Table from "../../components/admin/DashboardTable";
 import toast from "react-hot-toast";
 import { CustomError } from "../../types/api";
 import { SkeletonLoader } from "../../components/Loader";
+import { getLastMonth } from "../../utils/features";
 
 const Dashboard = () => {
+  const { lastSixMonths } = getLastMonth();
   const { user } = useSelector((state: RootState) => state.userReducer);
   const { data, isLoading, error, isError } = useStatsQuery(
     user?._id as string
@@ -21,7 +23,7 @@ const Dashboard = () => {
   }
 
   const stats = data?.stats!;
-  console.log(stats)
+  const transaction = stats?.chart.revenue;
   return (
     <div className="admin-container">
       <AdminSidebar />
@@ -60,10 +62,10 @@ const Dashboard = () => {
 
           <section className="graph-container">
             <div className="revenue-chart">
-              <h2>Revenue & Transaction</h2>
+              <h2>Month Wise Revenue</h2>
               <BarChart
-                data_2={stats?.chart.order!}
-                data_1={stats?.chart.revenue!}
+                labels={lastSixMonths}
+                data_2={transaction}
                 title_1="Revenue"
                 title_2="Transaction"
                 bgColor_1="rgb(0, 115, 255)"

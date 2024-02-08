@@ -28,11 +28,9 @@ ChartJS.register(
   Filler
 );
 
-const months = ["January", "February", "March", "April", "May", "June", "July"];
-
 interface BarChartProps {
   horizontal?: boolean;
-  data_1: number[];
+  data_1?: number[];
   data_2: number[];
   title_1: string;
   title_2: string;
@@ -49,7 +47,7 @@ export const BarChart = ({
   bgColor_1,
   bgColor_2,
   horizontal = false,
-  labels = months,
+  labels,
 }: BarChartProps) => {
   const options: ChartOptions<"bar"> = {
     responsive: true,
@@ -198,7 +196,7 @@ export const LineChart = ({
   label,
   backgroundColor,
   borderColor,
-  labels = months,
+  labels,
 }: LineChartProps) => {
   const options: ChartOptions<"line"> = {
     responsive: true,
