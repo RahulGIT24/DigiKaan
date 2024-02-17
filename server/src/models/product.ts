@@ -22,6 +22,16 @@ const schema = new mongoose.Schema({
         required: [true, "Please enter product's category"],
         trim: true
     },
+    totalStars:{
+        type: Number,
+        required:true,
+        default: 0,
+    },
+    avgRating:{
+        type: Number,
+        required:true,
+        default: 0,
+    },
     reviews: [
         {
             stars: { type: String, required: [true, "Provide stars"] },

@@ -409,12 +409,17 @@ body {
   text-align: center;
 }
 
+.product-article{
+  height: 85vh;
+  overflow-y: auto;
+  padding: 5rem;
+}
+
 .single-product {
   >h1 {
     margin-bottom: 2rem;
     font-weight: 300;
   }
-
   >p {
     font-size: x-large;
     margin-bottom: 7px;
@@ -457,11 +462,11 @@ body {
     color: red;
   };
 
-  .star {
-    width: 1rem;
-  }
 }
 
+.star {
+  width: 1rem;
+}
 .review-box {
   @include flex(column, start, start);
   margin-top: 2rem;

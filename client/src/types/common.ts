@@ -22,7 +22,8 @@ export interface Product {
     _id: string,
     price: number,
     stock: number,
-    reviews?: Review[]
+    reviews?: Review[],
+    avgRating?:Number
 }
 
 export type ShippingInfo = {

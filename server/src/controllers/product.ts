@@ -25,7 +25,7 @@ export const newProduct = TryCatch(
             success: false, message: "Error while uploading image"
         });
         await Product.create({
-            name, category: category?.toLowerCase(), stock, price, photo: cloudinaryResponse.secure_url
+            name, category: category?.toLowerCase(), stock, price, photo: cloudinaryResponse.secure_url, totalStars: 0, rating: 0
         })
         rm(photo?.path, () => {
             console.log("Deleted");
@@ -50,6 +50,8 @@ export const postReviews = TryCatch(
             review: review,
             user: userId
         })
+        product.totalStars += stars;
+        product.avgRating = Math.round(product.totalStars / product.reviews.length * 10) / 10;
         await product?.save();
         await invalidateCache({ product: true })
         return res.status(201).json({
@@ -65,13 +67,28 @@ export const deleteReview = TryCatch(
             return next(new ErrorHandler("Invalid Query", 400));
         }
         const product = await Product.findById(productId);
-        if(!product){
+        if (!product) {
             return next(new ErrorHandler("Product not found", 400));
         }
+        const reviewIndex = product.reviews.findIndex(review => review.id === reviewId);
+        if (reviewIndex == -1) {
+            return next(new ErrorHandler("Review Not Found", 404));
+        }
+        const review = product.reviews[reviewIndex];
+        const totalStars = product.totalStars - parseInt(review?.stars!);
+        product.reviews.splice(reviewIndex, 1);
+        let avgRating;
+        if (product.reviews.length > 0) {
+            avgRating = Math.round(totalStars / (product.reviews.length) * 10) / 10;
+        } else {
+            avgRating = 0;
+        }
+
         await Product.updateOne(
             { _id: productId },
-            { $pull: { reviews: { _id: reviewId } } }
+            { $set: { reviews: product.reviews, totalStars, avgRating } },
         );
+
         await invalidateCache({ product: true })
         return res.status(201).json({
             success: true, message: "Review Deleted"

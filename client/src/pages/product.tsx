@@ -101,7 +101,7 @@ const Product = () => {
       {isLoading ? (
         <SkeletonLoader length={10} />
       ) : (
-        <main className="product-management">
+        <main className="product-management"> 
           <section
             style={{
               padding: "2rem",
@@ -110,8 +110,7 @@ const Product = () => {
             <h2>{product?.name}</h2>
             <img src={product?.photo} alt="" />
           </section>
-
-          <article>
+          <article className="product-article">
             <div className="single-product">
               <h1>Product Info</h1>
               <p>Name: {product?.name}</p>
@@ -124,7 +123,17 @@ const Product = () => {
                   {product?.stock! > 0 ? "In stock" : "Out of Stock"}
                 </span>
               </p>
-            </div>
+              <p>
+                Rating -{" "}
+                <b>
+                  {product?.avgRating === 0
+                    ? `No Rating`
+                    : `${String(product?.avgRating)}`}
+                </b>{" "}
+                {product?.avgRating !== 0 && (
+                  <img src={star} className="star" />
+                )}
+              </p>
             {user?._id && (
               <>
                 <p className="quantity">Select Quantity</p>
@@ -203,6 +212,7 @@ const Product = () => {
                 </button>
               </main>
             )}
+            </div>
           </article>
           <article className="review-article">
             <div className="single-product">
