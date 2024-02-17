@@ -66,6 +66,7 @@ const Search = () => {
             <option value="">None</option>
             <option value="asc">Price Low to High</option>
             <option value="desc">Price High to Low</option>
+            <option value="rating">Rating</option>
           </select>
         </div>
         <div>

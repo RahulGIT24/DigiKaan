@@ -236,8 +236,16 @@ export const getAllProducts = TryCatch(
             baseQuery.category = String(category)
         }
 
+        let sortQuery = {}
+
+        if (sort === "rating") {
+            sortQuery = { avgRating: -1 } // sorting by rating in desending order
+        } else {
+            sortQuery = { price: sort === "asc" ? 1 : -1 }
+        }
+
         const [products, filteredOnlyProducts] = await Promise.all([
-            Product.find(baseQuery).sort(sort ? { price: sort === "asc" ? 1 : -1 } : undefined).limit(limit).skip(skip), Product.find(baseQuery)
+            Product.find(baseQuery).sort(sort ? sortQuery : undefined).limit(limit).skip(skip), Product.find(baseQuery)
         ])
 
         const totalPage = Math.ceil(filteredOnlyProducts.length / limit);
