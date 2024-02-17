@@ -124,7 +124,7 @@ const Product = () => {
                 </span>
               </p>
               <p>
-                Rating -{" "}
+                Rating: {" "}
                 <b>
                   {product?.avgRating === 0
                     ? `No Rating`
