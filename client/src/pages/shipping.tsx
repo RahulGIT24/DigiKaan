@@ -36,6 +36,14 @@ const Shipping = () => {
 
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if(shippingInfo.pincode < 0){
+      toast.error("Pincode should not be a negative number")
+      return;
+    }
+    if(shippingInfo.pincode.toString().length !== 6){
+      toast.error("Pincode should be of 6 digits")
+      return;
+    }
     dispatch(saveShippingInfo(shippingInfo));
     try {
       const { data } = await axios.post(
@@ -109,6 +117,7 @@ const Shipping = () => {
           <option value="UK">United Kingdom</option>
         </select>
         <input
+          min={0}
           type="number"
           placeholder="pincode"
           name="pincode"
