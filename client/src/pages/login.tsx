@@ -8,12 +8,15 @@ import { useLoginMutation } from "../redux/api/userApi";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { MessageResponse } from "../types/api";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { isActive } from "../redux/reducer/userReducer";
 
 const Login = () => {
   const navigate = useNavigate();
   const [login] = useLoginMutation();
   const [gender, setGender] = useState("");
   const [date, setDate] = useState("");
+  const dispatch = useDispatch();
   const loginHandler = async () => {
     try {
       const provider = new GoogleAuthProvider();
@@ -28,6 +31,7 @@ const Login = () => {
       });
       if ("data" in res) {
         toast.success(res.data.message);
+        dispatch(isActive(true))
         navigate("/");
       } else {
         const error = res.error as FetchBaseQueryError;

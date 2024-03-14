@@ -10,6 +10,8 @@ import { User } from "../types/common";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { isActive } from "../redux/reducer/userReducer";
 
 interface PropsType {
   user: User | null;
@@ -17,9 +19,11 @@ interface PropsType {
 
 const Header = ({ user }: PropsType) => {
   const [isOpen, setIsOpen] = useState(false);
+  const dispatch = useDispatch();
   const logout = async () => {
     try {
       await signOut(auth);
+      dispatch(isActive(false))
       toast.success("Signed Out!");
     } catch (error) {
       toast.error("Sign Out Failed");

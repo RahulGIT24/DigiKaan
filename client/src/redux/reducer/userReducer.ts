@@ -14,7 +14,10 @@ export const userReducer = createSlice({
             state.loading = false;
             state.user = null
         },
+        isActive:(state,action: PayloadAction<boolean>)=>{
+            state.flag = action.payload
+        }
     }
 })
 
-export const { userExist, userNotExist } = userReducer.actions
+export const { userExist, userNotExist,isActive } = userReducer.actions

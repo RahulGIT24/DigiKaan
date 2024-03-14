@@ -44,7 +44,7 @@ const Product = lazy(
 );
 
 const App = () => {
-  const { user, loading } = useSelector(
+  const { user, loading,flag } = useSelector(
     (state: { userReducer: UserReducerInitialState }) => state.userReducer
   );
   const dispatch = useDispatch();
@@ -57,7 +57,7 @@ const App = () => {
         dispatch(userNotExist());
       }
     });
-  }, []);
+  }, [flag]);
   return loading ? (
     <Loader />
   ) : (

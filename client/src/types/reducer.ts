@@ -2,7 +2,8 @@ import { CartItem, ShippingInfo, User } from "./common";
 
 export interface UserReducerInitialState {
     user: User | null,
-    loading: boolean
+    loading: boolean,
+    flag?:boolean
 }
 
 export interface CartReducerInitialState {
