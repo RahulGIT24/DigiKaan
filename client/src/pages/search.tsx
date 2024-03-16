@@ -105,6 +105,7 @@ const Search = () => {
           type="text"
           placeholder="Search by name..."
           value={search}
+          id="search-bar"
           onChange={(e) => {
             setSearch(e.target.value);
           }}
