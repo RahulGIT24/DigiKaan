@@ -26,21 +26,23 @@ const Home = () => {
         </Link>
       </h1>
       <main>
-        {isLoading ? (
-          <SkeletonLoader width="80vw" />
-        ) : (
-          data?.products.map((item) => (
-            <ProductCard
-              productId={item._id}
-              price={item.price}
-              stock={item.stock}
-              name={item.name}
-              photo={item.photo}
-              handler={addToCartHandler}
-              key={item._id}
-            />
-          ))
-        )}
+        {/* <div> */}
+          {isLoading ? (
+            <SkeletonLoader width="80vw" />
+          ) : (
+            data?.products.map((item) => (
+              <ProductCard
+                productId={item._id}
+                price={item.price}
+                stock={item.stock}
+                name={item.name}
+                photo={item.photo}
+                handler={addToCartHandler}
+                key={item._id}
+              />
+            ))
+          )}
+        {/* </div> */}
       </main>
     </div>
   );
