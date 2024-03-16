@@ -42,28 +42,25 @@ const Cart = () => {
   };
 
   useEffect(() => {
-    const id = setTimeout(() => {
-      axios
-        .get(`${server}/api/v1/payment/discount?coupon=${couponCode}`)
-        .then((res) => {
-          dispatch(appliedDiscount(res.data.discount));
-          setisValid(true);
-        })
-        .catch(() => {
-          dispatch(appliedDiscount(0));
-          dispatch(calculatePrice());
-          setisValid(false);
-        });
-      if (Math.random() > 0.5) {
-        setisValid(true);
-      } else {
+    if (cartItems.length > 0) {
+      const id = setTimeout(() => {
+        axios
+          .get(`${server}/api/v1/payment/discount?coupon=${couponCode}`)
+          .then((res) => {
+            dispatch(appliedDiscount(res.data.discount));
+            setisValid(true);
+          })
+          .catch(() => {
+            dispatch(appliedDiscount(0));
+            dispatch(calculatePrice());
+            setisValid(false);
+          });
+      }, 1000);
+      return () => {
+        clearTimeout(id);
         setisValid(false);
-      }
-    }, 1000);
-    return () => {
-      clearTimeout(id);
-      setisValid(false);
-    };
+      };
+    }
   }, [couponCode]);
 
   useEffect(() => {
@@ -73,6 +70,10 @@ const Cart = () => {
   return (
     <div className="cart">
       <main>
+        {
+          cartItems.length>0&&
+        <h1>Items in your Cart</h1>
+        }
         {cartItems.length > 0 ? (
           cartItems.map((item, index) => {
             return (
@@ -106,6 +107,7 @@ const Cart = () => {
           onChange={(e) => {
             setCouponCode(e.target.value);
           }}
+          disabled={cartItems.length === 0}
           placeholder="Enter coupon code"
         />
 

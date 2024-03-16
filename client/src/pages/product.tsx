@@ -101,117 +101,114 @@ const Product = () => {
       {isLoading ? (
         <SkeletonLoader length={10} />
       ) : (
-        <main className="product-management"> 
+        <main className="product-management">
           <section
             style={{
               padding: "2rem",
             }}
           >
-            <h2>{product?.name}</h2>
+            <h2>Product Info</h2>
+            <p>Name: {product?.name}</p>
+            <p>Price: {product?.price}</p>
+            <p>Stock: {product?.stock}</p>
+            <p>
+              Status:{" "}
+              <span className={product?.stock! > 0 ? "green" : "red"}>
+                {" "}
+                {product?.stock! > 0 ? "In stock" : "Out of Stock"}
+              </span>
+            </p>
+            <p>
+              Rating:{" "}
+              <b>
+                {product?.avgRating === 0
+                  ? `No Rating`
+                  : `${String(product?.avgRating)}`}
+              </b>{" "}
+              {product?.avgRating !== 0 && <img src={star} className="star" />}
+            </p>
             <img src={product?.photo} alt="" />
           </section>
           <article className="product-article">
             <div className="single-product">
-              <h1>Product Info</h1>
-              <p>Name: {product?.name}</p>
-              <p>Price: {product?.price}</p>
-              <p>Stock: {product?.stock}</p>
-              <p>
-                Status:{" "}
-                <span className={product?.stock! > 0 ? "green" : "red"}>
-                  {" "}
-                  {product?.stock! > 0 ? "In stock" : "Out of Stock"}
-                </span>
-              </p>
-              <p>
-                Rating: {" "}
-                <b>
-                  {product?.avgRating === 0
-                    ? `No Rating`
-                    : `${String(product?.avgRating)}`}
-                </b>{" "}
-                {product?.avgRating !== 0 && (
-                  <img src={star} className="star" />
-                )}
-              </p>
-            {user?._id && (
-              <>
-                <p className="quantity">Select Quantity</p>
-                <div className="quantity">
-                  <button onClick={decrementHandler}>-</button>
-                  <p>{quantity}</p>
-                  <button onClick={incrementHandler}>+</button>
-                </div>
+              {user?._id && (
+                <>
+                  <p className="quantity">Select Quantity</p>
+                  <div className="quantity">
+                    <button onClick={decrementHandler}>-</button>
+                    <p>{quantity}</p>
+                    <button onClick={incrementHandler}>+</button>
+                  </div>
+                  <main className="cart-btn">
+                    <button
+                      className="addtocart"
+                      disabled={disabled}
+                      onClick={() => {
+                        addToCartHandler({
+                          productId: product?._id || "",
+                          name: product?.name || "",
+                          photo: product?.photo || "",
+                          price: product?.price || 0,
+                          quantity: quantity || 0,
+                          stock: product?.stock || 0,
+                        });
+                      }}
+                    >
+                      <p>Add to Cart</p>{" "}
+                      <p>
+                        <IoMdCart />
+                      </p>
+                    </button>
+                  </main>
+
+                  <div className="review-box">
+                    <p>
+                      Write a Review
+                    </p>
+                    <textarea
+                      name="review"
+                      id=""
+                      cols={40}
+                      rows={7}
+                      placeholder="Add your review"
+                      value={review}
+                      onChange={(e) => {
+                        setReview(e.target.value);
+                      }}
+                    ></textarea>
+                    <ReactStars
+                      count={5}
+                      isEdit={true}
+                      size={20}
+                      onChange={ratingChanged}
+                      value={rating}
+                      activeColor="orange"
+                    />
+                    <button
+                      className="addtocart"
+                      disabled={disabled}
+                      onClick={postReview}
+                    >
+                      Post Review
+                    </button>
+                  </div>
+                </>
+              )}
+              {!user?._id && (
                 <main className="cart-btn">
                   <button
                     className="addtocart"
-                    disabled={disabled}
                     onClick={() => {
-                      addToCartHandler({
-                        productId: product?._id || "",
-                        name: product?.name || "",
-                        photo: product?.photo || "",
-                        price: product?.price || 0,
-                        quantity: quantity || 0,
-                        stock: product?.stock || 0,
-                      });
+                      navigate("/login");
                     }}
                   >
-                    <p>Add to Cart</p>{" "}
+                    <p>Sign In to Buy</p>{" "}
                     <p>
-                      <IoMdCart />
+                      <FaSignInAlt />
                     </p>
                   </button>
                 </main>
-
-                <div className="review-box">
-                  <h1>
-                    <strong>Write a Review</strong>
-                  </h1>
-                  <textarea
-                    name="review"
-                    id=""
-                    cols={40}
-                    rows={7}
-                    placeholder="Add your review"
-                    value={review}
-                    onChange={(e) => {
-                      setReview(e.target.value);
-                    }}
-                  ></textarea>
-                  <ReactStars
-                    count={5}
-                    isEdit={true}
-                    size={20}
-                    onChange={ratingChanged}
-                    value={rating}
-                    activeColor="orange"
-                  />
-                  <button
-                    className="addtocart"
-                    disabled={disabled}
-                    onClick={postReview}
-                  >
-                    Post Review
-                  </button>
-                </div>
-              </>
-            )}
-            {!user?._id && (
-              <main className="cart-btn">
-                <button
-                  className="addtocart"
-                  onClick={() => {
-                    navigate("/login");
-                  }}
-                >
-                  <p>Sign In to Buy</p>{" "}
-                  <p>
-                    <FaSignInAlt />
-                  </p>
-                </button>
-              </main>
-            )}
+              )}
             </div>
           </article>
           <article className="review-article">

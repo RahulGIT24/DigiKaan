@@ -47,7 +47,6 @@
             @include flex(row, flex-start, flex-start);
             flex-wrap: wrap;
             height: calc(100% - 10rem);
-            overflow-y: auto;
         }
 
         article {

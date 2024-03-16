@@ -33,7 +33,8 @@
 }
 
 .product-management {
-  @include flex(row, center, unset);
+  @include flex(row, center, center);
+  flex-wrap: wrap;
   padding: 4rem;
 
   > section {

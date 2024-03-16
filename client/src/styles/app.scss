@@ -410,9 +410,13 @@ body {
 }
 
 .product-article{
-  height: 85vh;
+  height: 95vh;
   overflow-y: auto;
+  &::-webkit-scrollbar{
+    display: none;
+  }
   padding: 5rem;
+  margin: 0 5rem;
 }
 
 .single-product {
@@ -468,7 +472,7 @@ body {
   width: 1rem;
 }
 .review-box {
-  @include flex(column, start, start);
+  @include flex(column);
   margin-top: 2rem;
 
   >textarea {
@@ -480,7 +484,8 @@ body {
     padding-top: 0.5rem;
   };
 
-  >h1 {
-    text-align: left;
+  >p {
+    text-align: center;
+    font-size: x-large;
   }
 }

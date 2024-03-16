@@ -1,12 +1,19 @@
 .cart {
     padding: 2rem 4rem;
-    @include flex(row, stretch,unset, 4rem);
-    height: calc(100vh - 4rem);
+    @include flex(row, center,unset, 4rem);
+    // height: calc(100vh - 4rem);
+    flex-wrap: wrap;
 
     >main {
-        width: 70%;
+        padding: 0 12px;
+        min-width: 40rem;
+        max-height: 35rem;
+        min-height: 35rem;
 
         >h1 {
+            position: sticky;
+            top: 0;
+            background: white;
             @include heading(2px);
             text-align: center
         }
@@ -19,7 +26,7 @@
     }
 
     >aside {
-        width: 30%;
+        min-width: 40%;
         padding: 4rem;
         @include flex(column, center, stretch, 1.5rem);
 
@@ -30,7 +37,7 @@
             border-radius: 5px;
             margin-top: 2rem;
         }
-
+        overflow: auto;
         >p {
             font-size: 1.1rem;
 
