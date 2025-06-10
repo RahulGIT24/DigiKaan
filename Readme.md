@@ -64,6 +64,12 @@ It is created using Node Js, Typescript, React Js, Redux, MongoDB, Firebase, Exp
 
 3. Run `npm run dev` to start the frontend
 
+### Docker Setup
+1. Make sure you have Docker installed on your machine.
+2. Open the terminal in the root directory of the project and run `docker-compose up`.
+3. This will build the Docker images and start the containers for both the server and client.
+4. Add your secret keys in docker compose file.
+5. You can access the application at `http://localhost:5173`
 
 ## Author's Social Links 🖥️
 
